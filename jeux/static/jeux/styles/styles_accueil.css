@@ -1,0 +1,114 @@
+/* Boutons stylisés */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #007acc;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #005fa3;
+}
+
+.map {
+  /*position: absolute;*/
+  top: 100px; /* 60px header + 60px titre */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 800px;/*calc(100% - 100px);*/
+  z-index: 1;
+}
+
+
+#side-bar {
+  position: absolute;
+  top: 300px;
+  left: 50px;
+  width: 300px;
+  z-index: 10;
+  background: rgba(255,255,255,0.95);
+  padding: 1em;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  max-height: 90%;
+}
+
+.toggleContainer {
+  margin-top: 10px;
+  background: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.toggleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(90deg);
+}
+
+.info-content {
+  font-size: 0.9em;
+  color: #333;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.ol-popup {
+  position: absolute;
+  background: white;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  bottom: 12px;
+  left: -50px;
+  min-width: 100px;
+  text-align: center;
+}
+
+
+/* Adaptation mobile */
+@media (max-width: 768px) {
+  #side-bar {
+    position: static;
+    width: 90%;
+    margin: 1em auto;
+    max-height: none;
+    background: rgba(255,255,255,0.95);
+  }
+
+  .map {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Hauteur réduite sur petits écrans */
+    top: 0;
+  }
+  body, html {
+    overflow-y: auto;
+  }
+}

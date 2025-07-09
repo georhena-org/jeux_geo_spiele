@@ -1,0 +1,60 @@
+{% extends "base.html"%}
+
+{% load static %}
+
+{% block title%} Géophysique du Rhin Supérieur{% endblock%}
+
+{% block content %}
+  <h1 id = "page-title-GP">Géographie physique du Rhin Supérieur</h1>
+     <div id='webmap' class="map"></div>
+      <div id="side-panel"> 
+        <div id="endGameMessage" style="display:none; text-align:center; padding:1em; background:white; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2); max-width:400px; margin:20px auto; ">
+          <p id="finalMessage" style="font-size:18px; font-weight:bold;"></p>
+          <p id="finalScore"></p>
+          <p id="finalTries"></p>
+          <p id="finalTime"></p>
+          <button id="restartBtn">Rejouer</button>
+          <button onclick= "window.open('https://geoportal.georhena.eu/datahub/dataset/5a380a89-cfd2-4e9e-8638-8020c03c9750','_blank')" id="exploreBtn">Explorer la donnée</button>          
+        </div>
+        <div id = "guess">
+          <div id = "randomText"></div>
+        </div>
+        <div id = "test">
+          <h2>Essais restants </h2>
+          <!-- <div id="test"> -->
+             <!-- <div id = "error" > </div> -->
+              <div id="gauge">
+              <div class="gauge-box"></div>
+              <div class="gauge-box"></div>
+              <div class="gauge-box"></div>
+              <div class="gauge-box"></div>
+              <div class="gauge-box"></div>
+            <!-- </div> -->
+          </div>
+        </div>
+        <div id = "points">
+          <h2>Points </h2>
+          <div id ="number"></div>
+        </div>
+        <div>
+          Temps : <span id="chrono">00:00</span>
+        </div>
+        <div id = "encouragments"></div>
+    </div>
+    </div>
+  <div id = "tooltip"></div>
+  <div id = "tooltipFalse"></div>
+  <div id = "tooltipCorrect"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <link rel="stylesheet" href="{% static 'jeux/ol.css' %}">
+  <link rel="stylesheet" href="{% static 'jeux/styles/styles_villes.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="{% static 'jeux/ol.js' %}"></script>
+  <script>
+  const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
+  const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258.geojson' %}";
+  </script>
+  <script src="{% static 'jeux/js/geophysique_trad.js' %}"></script>
+{% endblock %}

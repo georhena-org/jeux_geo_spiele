@@ -1,0 +1,74 @@
+/* jeux/static/styles.css */
+body {
+  font-family: 'Quicksand', sans-serif;
+  margin: 0; 
+  padding:0; 
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #004466; /* exemple de couleur de fond */
+}
+
+.header-left, .header-center, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-center {
+  flex: 1;
+  justify-content: center;
+}
+
+.home-icon {
+  width: 40px; /* adapte selon la taille de ton SVG */
+  height: auto;
+  cursor: pointer;
+}
+
+#main-title {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.5em;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+.header-right button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+footer {
+  background-color: #004466;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+    main {
+        padding: 1rem;
+    }
+
+    .game-list a {
+        font-size: 1.2rem;
+    }
+}

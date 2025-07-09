@@ -1,0 +1,46 @@
+<!-- jeux/templates/jeux/base.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plateforme jeux géographiques{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'jeux/styles/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <a href="{% url 'accueil' %}">
+            <img src ="{% static 'jeux/data/logo/home.svg' %}" alt="HOME" class="home-icon">
+            </a>
+        </div>
+        <div class="header-right">
+        <h1 id = "main-title">Les jeux géographiques du Rhin Supérieur</h1>
+        </div>
+        <div id="header-right">
+        <button onclick="setLanguage('FR')">FR</button>
+        <button onclick="setLanguage('DE')">DE</button>
+    </div>
+    </header>
+    
+    <main>
+        {% block content %}
+        <!-- Contenu des pages ici -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 – Projet original développé par GeoRhena</p>
+    </footer>
+
+    <script src="{% static 'jeux/scripts.js' %}"></script>
+    <script src="{% static 'jeux/js/translate.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+
+</body>
+</html>
