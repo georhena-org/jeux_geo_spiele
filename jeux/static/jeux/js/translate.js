@@ -16,7 +16,12 @@
     points: "Points:",
     time: "Temps :",
     tooltip: "Afficher le nom des entités au survol",
-    guessText: (ville) => `Où se situe ${ville} ?`,
+    guessText: (feat) => `Où se situe ${feat} ?`,
+    guessTextREG: (type, feat) => {
+      if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
+      if (type === "canton") return `Où se situe le canton de ${feat} ?`;
+      return `Où se situe ${feat} ?`;
+    },
     winMessage: "🎉 Bravo ! Toutes les villes ont été trouvées !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
     finalScore: "Score final :",
@@ -40,7 +45,12 @@
     points: "Punkte:",
     time: "Zeit :",
     tooltip: "Namen beim Überfahren anzeigen",
-    guessText: (ville) => `Wo liegt ${ville}?`,
+    guessText: (feat) => `Wo liegt ${feat}?`,
+    guessTextREG:  (type, feat) => {
+      if (type === "Landkreis") return `Wo liegt der Landkreis ${feat}?`;
+      if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
+       return `Wo liegt ${feat}?`;
+    },
     winMessage: "🎉 Bravo! Alle Städte wurden gefunden!",
     looseMessage: "😔 Schade... Versuch es nochmal, du bist fast da!",
     finalScore: "Endpunktzahl :",
@@ -64,11 +74,14 @@ function setLanguage(lang) {
   $("#page-title-GP").text(translations[lang].titleGP);
   $("#page-title-reg").text(translations[lang].titleReg);
   $("#restartBtn").text(translations[lang].restart);
+  $("#restartBtnREG").text(translations[lang].restart);
+  $("#restartBtnGP").text(translations[lang].restart);
   $("#exploreBtn").text(translations[lang].explore);
   $("#test h2").text(translations[lang].tries);
   $("#points h2").text(translations[lang].points);
   $("#chrono").parent().html(`${translations[lang].time} <span id='chrono'>00:00</span>`);
   $("#randomText").text(translations[lang].guessText(currentTarget));
+  $("#randomTextREG").text(translations[lang].guessTextREG(currentType, currentTarget));
   $("#encouragments").text(translations[lang].encouragements);
 
   $("#finalScore").html(`${translations[currentLang].finalScore} ${points}`);

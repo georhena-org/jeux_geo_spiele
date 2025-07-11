@@ -135,6 +135,10 @@ let elapsedTime = 0;
 let gameActive = false
 let points = 0;
 let essais = 5;
+const mapRect = map.getTargetElement().getBoundingClientRect();
+let isBlinking = false;
+
+
 
 
 function formatTime(seconds) {
@@ -264,7 +268,7 @@ function afterLoad() {
 
 
 function updateGauge() {
-  const boxes = document.querySelectorAll('#gauge .gauge-box');
+  const boxes = document.querySelectorAll('#gaugeGP .gauge-boxGP');
   for (let i = 0; i < boxes.length; i++) {
     if (i < essais) {
       boxes[i].style.opacity = '1';  // pleine si essais restants
@@ -295,12 +299,16 @@ function checkIfAllLoaded() {
     // Fusionner les listes (si ce n'est pas déjà fait)
     listeNoms = [...new Set([...listeSommets, ...listeHydro])];
 
-    // Ici tu peux faire le tirage aléatoire pour listeGuess etc.
-    listeGuess = [];
-    for (let i = 0; i < 20; i++){
-      const randomIndexGuess = Math.floor(Math.random() * listeNoms.length);
-      listeGuess.push(listeNoms[randomIndexGuess]);
-    }
+let nomsDisponibles = [...listeNoms]; //créer une copie
+console.log(nomsDisponibles)
+listeGuess = [];
+
+for (let i = 0; i < 20 && nomsDisponibles.length > 0; i++) {
+  const randomIndex = Math.floor(Math.random() * nomsDisponibles.length);
+  const nom = nomsDisponibles.splice(randomIndex, 1)[0]; // Retire et récupère l'élément
+  listeGuess.push(nom);
+}
+
 
     afterLoad();
     showRandomText();
@@ -328,7 +336,7 @@ function initGame(){
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
   document.getElementById('randomText').innerText = "";
-  document.getElementById('restartBtn').style.display = "none";
+  document.getElementById('restartBtnGP').style.display = "none";
   document.getElementById('encouragments').innerText = "";
 
 
@@ -398,6 +406,7 @@ hydroSource.once('featuresloadend', function () {
 }
 
 function endGame(){
+  isBlinking = false
   hydroLayer.setVisible(true);
   sommetsLayer.setVisible(true);
   if (blinkInterval) {
@@ -415,7 +424,7 @@ function endGame(){
 
   // Montrer l'encart
   document.getElementById('endGameMessage').style.display = "block";
-  document.getElementById('restartBtn').style.display = "block";
+  document.getElementById('restartBtnGP').style.display = "block";
   document.getElementById('exploreBtn').style.display = "block";
 
   // Réinitialiser l'interface utilisateur
@@ -455,6 +464,8 @@ function endGame(){
 // Gestion de l'événement de survol
 let selected= null;
 const tooltip = document.getElementById('tooltip');
+const tooltipFalse = document.getElementById('tooltipFalse');
+
 
 
 
@@ -479,10 +490,13 @@ map.on('pointermove', function (e) {
       if (!featuresCorrectes.has(f)) {
         f.setStyle(hoverPointStyle);
         if (!gameActive) {
-      tooltip.innerText = nomFeat;
-      tooltip.style.display = 'block';
-      tooltip.style.left = (e.originalEvent.pageX + 10) + 'px';
-      tooltip.style.top = (e.originalEvent.pageY + 10) + 'px';
+        const tooltip = $('#tooltip');
+        tooltip.text(nomFeat);
+        tooltip.css({
+          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+          display: 'block'
+        });
       }
       } else {
         // sommet trouvé : il a déjà son label, on ne montre pas le tooltip flottant
@@ -492,17 +506,23 @@ map.on('pointermove', function (e) {
       if (!featuresCorrectes.has(f)) {
       f.setStyle(hoverLineStyle);
       if (!gameActive) {
-      tooltip.innerText = nomFeat;
-      tooltip.style.display = 'block';
-      tooltip.style.left = (e.originalEvent.pageX + 10) + 'px';
-      tooltip.style.top = (e.originalEvent.pageY + 10) + 'px';
+        const tooltip = $('#tooltip');
+        tooltip.text(nomFeat);
+        tooltip.css({
+          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+          display: 'block'
+        });
       }
     } else {
         f.setStyle(correctStyleHydro);
-      tooltip.innerText = nomFeat;
-      tooltip.style.display = 'block';
-      tooltip.style.left = (e.originalEvent.pageX + 10) + 'px';
-      tooltip.style.top = (e.originalEvent.pageY + 10) + 'px';
+        const tooltip = $('#tooltip');
+        tooltip.text(nomFeat);
+        tooltip.css({
+          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+          display: 'block'
+        });
       }
     } else {
       tooltip.style.display = "none";
@@ -523,12 +543,11 @@ map.on('click', function (e) {
     map.forEachFeatureAtPixel(e.pixel, function (f) {
       //selected = f;
       const nomFeat = f.get('name')
-
-
       if (!listeNoms.includes(nomFeat)) {
         return true;
       }
       if (nomFeat === currentTarget){
+        isBlinking = false
         if (listeSommets.includes(nomFeat)) {
           f.setStyle(correctStyleSommet(nomFeat));
         } else if (listeHydro.includes(nomFeat)) {
@@ -536,8 +555,8 @@ map.on('click', function (e) {
         const tooltip = $('#tooltipCorrect');
         tooltip.text(nomFeat);
         tooltip.css({
-          left: e.originalEvent.clientX + 10 + 'px',
-          top: e.originalEvent.clientY + 10 + 'px',
+          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
           display: 'block'
         });
         tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
@@ -554,6 +573,13 @@ map.on('click', function (e) {
         setTimeout(() => {
           showRandomText();
         }, 500); 
+        setTimeout (() => {
+        document.getElementById('guess').classList.add('flash-correctGP');
+        }, 500);
+        // La retire après 800ms
+        setTimeout(() => {
+          document.getElementById('guess').classList.remove('flash-correctGP');
+        }, 1200);
       if (listeGuess.length === 0) {
         stopTimer();
         gameActive = false;
@@ -561,22 +587,25 @@ map.on('click', function (e) {
         return;
     }
       }else{
-        //points = Math.max(0, points - 50);
-        const tooltip = $('#tooltipFalse');
-        tooltip.text(nomFeat);
-        tooltip.css({
-          left: e.originalEvent.clientX + 10 + 'px',
-          top: e.originalEvent.clientY + 10 + 'px',
-          display: 'block'
-        });
-        tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
-        
+        points = Math.max(0, points - 50);
         randomEncourage();
         wrongClicksForCurrentTarget++;
         if (wrongClicksForCurrentTarget >= 3 && !blinkInterval) {
             startBlinkingCurrentTarget();
             essais = Math.max(0, essais - 1);
+          } if (wrongClicksForCurrentTarget > 3 ) {
+            isBlinking = true; 
           }
+        if (!isBlinking) {
+            const tooltip = $('#tooltipFalse');
+            tooltip.text(nomFeat);
+            tooltip.css({
+              left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+              top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+              display: 'block'
+        });
+        tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
+      }
         //document.getElementById('error').innerText = essais;
         document.getElementById('number').innerText = points;
         updateGauge()
@@ -592,10 +621,10 @@ map.on('click', function (e) {
     });
   });
 
-document.getElementById('restartBtn').addEventListener('click', function () {
+document.getElementById('restartBtnGP').addEventListener('click', function () {
   // Masquer le message final et les boutons
   document.getElementById('endGameMessage').style.display = "none";
-  document.getElementById('restartBtn').style.display = "none";
+  document.getElementById('restartBtnGP').style.display = "none";
   document.getElementById('exploreBtn').style.display = "none";
 
   // Réinitialiser l'interface utilisateur

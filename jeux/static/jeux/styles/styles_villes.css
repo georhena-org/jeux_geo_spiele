@@ -48,8 +48,7 @@ body, html {
 
 #tooltip {
   position: absolute;
-  background: rgb(221, 91, 91);
-  color: white;
+  background: rgba(255, 255, 255, 0.9);
   padding: 4px 8px;
   border: 1px solid #999;
   border-radius: 4px;
@@ -105,6 +104,35 @@ body, html {
   transition: opacity 0.3s ease;
 }
 
+#gaugeGP {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+.gauge-boxGP {
+  width: 20px;
+  height: 20px;
+  margin: 0 4px;
+  background-color: rgb(20, 96, 20);
+  border-radius: 4px;
+  transition: opacity 0.3s ease;
+}
+
+#gaugeREG {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+.gauge-boxREG {
+  width: 20px;
+  height: 20px;
+  margin: 0 4px;
+  background-color: rgb(204, 165, 24);
+  border-radius: 4px;
+  transition: opacity 0.3s ease;
+}
 
 /* Les autres blocs restent inchangés ou légèrement ajustés */
 #guess, #test, #points, #endGameMessage {
@@ -158,6 +186,17 @@ body, html {
   color: white !important;
 }
 
+.flash-correctGP {
+  background-color: rgb(39, 102, 23) !important;
+  color: white !important;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.flash-correctGP * {
+  color: white !important;
+}
+
+
 
 #restartBtn {
     display: block;
@@ -176,6 +215,47 @@ body, html {
 #restartBtn:hover {
   transform: scale(1.05);
   background-color: rgb(186, 63, 195);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+#restartBtnGP {
+    display: block;
+    margin: 20px auto;
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: rgb(39, 102, 23);
+    color: white;
+    padding: 1em;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+#restartBtnGP:hover {
+  transform: scale(1.05);
+  background-color: rgb(78, 155, 78);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+#restartBtnREG {
+    display: block;
+    margin: 20px auto;
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: rgb(204, 165, 24);
+    color: white;
+    padding: 1em;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#restartBtnREG:hover {
+  transform: scale(1.05);
+  background-color: rgb(176, 126, 0);
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 

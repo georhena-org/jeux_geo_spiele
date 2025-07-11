@@ -99,6 +99,10 @@ let selected = null;
 let points = 0;
 let essais = 5;
 const mapRect = map.getTargetElement().getBoundingClientRect();
+let wrongClicksForCurrentTarget = 0;
+let blinkInterval = null;
+let foundVilles = new Set();
+
 
 // styles réponses
 
@@ -110,6 +114,14 @@ const falseStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({ color: 'red', width: 2 }),
 }),
 });
+
+const originalPointStyle = new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: 5,
+      fill: new ol.style.Fill({ color: 'black' }),
+      stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
+  }),
+  })
 
 // fonctions utilitaires
 
@@ -136,6 +148,7 @@ function stopTimer() {
     timerInterval = null;
   }
 }
+
 function showEncouragementMessage(text) {
   const encouragementDiv = document.getElementById('encouragments');
   encouragementDiv.innerText = text;
@@ -158,6 +171,38 @@ function randomEncourage() {
   const randomId = Math.floor(Math.random() * translations[currentLang].retryMessages.length);
   showEncouragementMessage(translations[currentLang].retryMessages[randomId]);
 }
+
+function startBlinkingCurrentTarget() {
+  let targetLayer = listeVilles.includes(currentTarget) ? villesLayer : villesLayer;
+  let source = targetLayer.getSource();
+  let featureToBlink = source.getFeatures().find(f => f.get('name') === currentTarget);
+  if (!featureToBlink) return;
+
+  let visible = true;
+
+  blinkInterval = setInterval(() => {
+    if (!foundVilles.has(featureToBlink)) {
+      if (visible) {
+        // style "flash"
+        featureToBlink.setStyle(new ol.style.Style({
+          stroke: new ol.style.Stroke({ color: 'yellow', width: 4 }),
+          image: new ol.style.Circle({
+            radius: 7,
+            fill: new ol.style.Fill({ color: 'yellow' }),
+            stroke: new ol.style.Stroke({ color: 'orange', width: 2 }),
+          })
+        }));
+      } else {
+        // remettre le style normal
+        if (listeVilles.includes(currentTarget)) {
+          featureToBlink.setStyle(originalPointStyle);
+        }
+      }
+      visible = !visible;
+    }
+  }, 500);
+}
+
 
 
 function afterLoad() {
@@ -187,6 +232,10 @@ function getCookie(name) {
 
 function endGame(){
   tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
+    if (blinkInterval) {
+    clearInterval(blinkInterval);
+    blinkInterval = null;
+  }
   let message = listeVilles.length === 0
     ? translations[currentLang].winMessage
     : translations[currentLang].looseMessage;
@@ -263,6 +312,11 @@ function endGame(){
 function showRandomText() {
     const randomIndex = Math.floor(Math.random() * listeVilles.length);
     currentTarget = listeVilles[randomIndex];
+    wrongClicksForCurrentTarget = 0;
+    if (blinkInterval) {
+      clearInterval(blinkInterval);
+      blinkInterval = null;
+    }
     document.getElementById('randomText').innerText = translations[currentLang].guessText(currentTarget);
 };
 
@@ -280,9 +334,12 @@ function updateGauge() {
 
 // initialiser le jeu
 function initGame() {
+  foundVilles.clear();
   points = 0;
   essais = 5;
   updateGauge()
+  wrongClicksForCurrentTarget = 0;
+  blinkInterval = null;
 
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
@@ -338,7 +395,7 @@ villesSource.once('featuresloadend', function () {
 
 
 // Gestion de l'événement de survol
-const tooltip = document.getElementById('tooltip');
+const tooltip = document.getElementById('tooltipFalse');
 
 map.on('pointermove', function (e){
   if (!gameActive) return;
@@ -396,8 +453,13 @@ map.on('click', function (e) {
       if (nomVille === currentTarget){
         f.setStyle(correctStyle);
         listeVilles = listeVilles.filter(v => v !== nomVille);
+        foundVilles.add(nomVille);
+        if (wrongClicksForCurrentTarget >= 1) {
+        document.getElementById('number').innerText = points;
+          } else {
         points += 100
         document.getElementById('number').innerText = points;
+          }
         showRandomText();
         // Ajoute temporairement la classe de surbrillance
         document.getElementById('guess').classList.add('flash-correct');
@@ -414,20 +476,24 @@ map.on('click', function (e) {
     }
       }else{
         //soustraction d'un essai et de 50 points
-        essais = Math.max(0, essais - 1);
+        //essais = Math.max(0, essais - 1);
         points = Math.max(0, points - 50);
         randomEncourage();    
-        //tooltip apparait en fondu
-        const tooltip = $('#tooltip');
+        wrongClicksForCurrentTarget++;
+        if (wrongClicksForCurrentTarget >= 1 && !blinkInterval) {
+            startBlinkingCurrentTarget();
+            essais = Math.max(0, essais - 1);
+        const tooltip = $('#tooltipFalse');
         tooltip.text(nomVille);
         tooltip.css({
           left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
-          top: e.originalEvent.clientY - mapRect.top + 35 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
           display: 'block'
         });
         tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
-        // affichage des essais et des points 
-        //document.getElementById('error').innerText = essais;
+        } else {
+        tooltip.style.display = "none"; // le tooltip n'apparait plus une fois que la ville à trouver clignote
+        }
         document.getElementById('number').innerText = points;
         updateGauge()
         if (essais === 0){
@@ -437,6 +503,7 @@ map.on('click', function (e) {
         }
       }
       //console.log(f.get('name'))
+
       console.log(f.get('name'))
       return true;
     });

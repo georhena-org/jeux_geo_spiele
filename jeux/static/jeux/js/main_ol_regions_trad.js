@@ -65,12 +65,63 @@ let regionsLayer = null
 let listeRegions = [];
 let foundRegions = new Set();
 let currentTarget = "";
+let currentType = "";
 let timerInterval = null;
 let elapsedTime = 0;
 let gameActive = false
 let selected = null;
 let essais = 5;
 let points = 0;
+const mapRect = map.getTargetElement().getBoundingClientRect();
+const nomToNUTS = {};
+
+
+//styles couches 
+
+const hoverStyle = new ol.style.Style({
+      fill: new ol.style.Fill({ color: 'rgba(192, 235, 215, 0.64)' }),
+      stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
+      });
+
+const correctStyle = new ol.style.Style({
+        fill: new ol.style.Fill({ color: 'rgba(192, 235, 215, 0.64)' }),
+      stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
+      });
+
+// Style rouge pour les régions non trouvées
+const missedStyle = new ol.style.Style({
+        fill: new ol.style.Fill({ color: 'rgba(190, 26, 26, 0.64)' }),
+        stroke: new ol.style.Stroke({ color: 'rgba(172, 15, 15, 0.99)', width: 2 }),      
+    });
+
+
+function styleByType(feature) {
+  const nuts3 = feature.get("nuts3");
+  const type = detectTypeFromNUTS(nuts3);
+
+  let fillColor, strokeColor;
+
+  switch (type) {
+    case "Landkreis":
+      fillColor = "rgba(15, 172, 98, 0.64)";
+      strokeColor = "rgba(15, 172, 99, 0.99)";
+      break;
+    case "canton":
+      fillColor = "rgba(0, 123, 255, 0.5)";
+      strokeColor = "rgba(0, 123, 255, 1)";
+      break;
+    case "collectivité":
+    default:
+      fillColor = "rgba(255, 193, 7, 0.5)";
+      strokeColor = "rgba(255, 193, 7, 1)";
+      break;
+  }
+
+  return new ol.style.Style({
+    fill: new ol.style.Fill({ color: fillColor }),
+    stroke: new ol.style.Stroke({ color: strokeColor, width: 2 }),
+  });
+}
 
 // fonctions utilitaires
 
@@ -98,11 +149,24 @@ function stopTimer() {
   }
 }
 
+
+function detectTypeFromNUTS(nuts3) {
+  if (!nuts3) return null;
+  if (nuts3.startsWith("CH")) return "canton";
+  if (nuts3.startsWith("DE")) return "Landkreis";
+  return "collectivité";
+}
+
+
 function showRandomText() {
     const randomIndex = Math.floor(Math.random() * listeRegions.length);
     currentTarget = listeRegions[randomIndex];
-    document.getElementById('randomText').innerText = translations[currentLang].guessText(currentTarget);
+    const nuts3 = nomToNUTS[currentTarget]
+    currentType = detectTypeFromNUTS(nuts3)
+    document.getElementById('randomTextREG').innerText = translations[currentLang].guessTextREG(currentType, currentTarget);
 };
+
+
 function showEncouragementMessage(text) {
   const encouragementDiv = document.getElementById('encouragments');
   encouragementDiv.innerText = text;
@@ -135,7 +199,7 @@ function afterLoad() {
 
 
 function updateGauge() {
-  const boxes = document.querySelectorAll('#gauge .gauge-box');
+  const boxes = document.querySelectorAll('#gaugeREG .gauge-boxREG');
   for (let i = 0; i < boxes.length; i++) {
     if (i < essais) {
       boxes[i].style.opacity = '1';  // pleine si essais restants
@@ -172,8 +236,8 @@ function initGame() {
 
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
-  document.getElementById('randomText').innerText = "";
-  document.getElementById('restartBtn').style.display = "none";
+  document.getElementById('randomTextREG').innerText = "";
+  document.getElementById('restartBtnREG').style.display = "none";
   document.getElementById('encouragments').innerText = "";
 
 
@@ -195,10 +259,7 @@ var regionsSource = new ol.source.Vector({
 // charger la couche de points des régions avec le style
 regionsLayer = new ol.layer.Vector({
   source: regionsSource,
-  style: new ol.style.Style({
-      fill: new ol.style.Fill({ color: 'rgba(15, 172, 98, 0.64)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
-  }),
+  style: styleByType,
 });
 
 map.addLayer(regionsLayer);
@@ -209,6 +270,9 @@ regionsSource.once('featuresloadend', function () {
   features.forEach(f => {
     f.setStyle(null);
     listeRegions.push(f.get('nom'))
+    const nom = f.get('nom')
+    const nuts3 = f.get('nuts3')
+    nomToNUTS[nom] = nuts3;
   });
   //initGame()
   afterLoad()
@@ -233,7 +297,7 @@ function endGame(){
 
   // Montrer l'encart
   document.getElementById('endGameMessage').style.display = "block";
-  document.getElementById('restartBtn').style.display = "block";
+  document.getElementById('restartBtnREG').style.display = "block";
   document.getElementById('exploreBtn').style.display = "block";
 
   // Réinitialiser l'interface utilisateur
@@ -258,7 +322,7 @@ function endGame(){
       'X-CSRFToken': getCookie('csrftoken'), 
     },
     body: JSON.stringify({
-      game: 'villes',
+      game: 'collectivites',
       score: points,
       time_seconds: elapsedTime
     })
@@ -274,21 +338,7 @@ function endGame(){
   .catch(error => console.error('Erreur réseau:', error));
 }
 
-const hoverStyle = new ol.style.Style({
-      fill: new ol.style.Fill({ color: 'rgba(192, 235, 215, 0.64)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
-      });
 
-const correctStyle = new ol.style.Style({
-        fill: new ol.style.Fill({ color: 'rgba(192, 235, 215, 0.64)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
-      });
-
-// Style rouge pour les régions non trouvées
-const missedStyle = new ol.style.Style({
-        fill: new ol.style.Fill({ color: 'rgba(190, 26, 26, 0.64)' }),
-        stroke: new ol.style.Stroke({ color: 'rgba(172, 15, 15, 0.99)', width: 2 }),      
-    });
 
 
 //let gameEnded = false;
@@ -343,10 +393,14 @@ map.on('pointermove', function (e) {
     };
   }
   if (gameEnded && selected) {
-    tooltip.innerText = selected.get('nom');
-    tooltip.style.display = 'block';
-    tooltip.style.left = (e.originalEvent.pageX + 10) + 'px';
-    tooltip.style.top = (e.originalEvent.pageY + 10) + 'px';
+   const tooltip = $('#tooltip');
+  const nom = selected.get('nom');
+  tooltip.text(nom);
+  tooltip.css({
+    left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+    top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+    display: 'block'
+  });
   }
 });
 
@@ -369,8 +423,8 @@ map.on('click', function (e) {
         const tooltip = $('#tooltipCorrect');
         tooltip.text(nom);
         tooltip.css({
-          left: e.originalEvent.clientX + 10 + 'px',
-          top: e.originalEvent.clientY + 10 + 'px',
+          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
           display: 'block'
         });
         tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
@@ -387,8 +441,8 @@ map.on('click', function (e) {
         const tooltip = $('#tooltipFalse');
         tooltip.text(nom);
         tooltip.css({
-          left: e.originalEvent.clientX + 10 + 'px',
-          top: e.originalEvent.clientY + 10 + 'px',
+          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
           display: 'block'
         });
         tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
@@ -405,10 +459,10 @@ map.on('click', function (e) {
     });
   });
 
-document.getElementById('restartBtn').addEventListener('click', function () {
+document.getElementById('restartBtnREG').addEventListener('click', function () {
   // Masquer le message final et les boutons
   document.getElementById('endGameMessage').style.display = "none";
-  document.getElementById('restartBtn').style.display = "none";
+  document.getElementById('restartBtnREG').style.display = "none";
   document.getElementById('exploreBtn').style.display = "none";
 
   // Réinitialiser l'interface utilisateur
