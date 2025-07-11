@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['vps-82c0d32e.vps.ovh.net','127.0.0.1']
+ALLOWED_HOSTS = ['jeux-geo.georhena.eu','127.0.0.1']
 
 
 # Application definition
@@ -124,8 +124,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-FORCE_SCRIPT_NAME = '/jeux_geo_spiele'
-STATIC_URL = '/static_jg/'
+
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static/')
 
 # Default primary key field type
