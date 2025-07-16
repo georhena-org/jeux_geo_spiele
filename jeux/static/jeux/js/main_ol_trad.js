@@ -102,6 +102,7 @@ const mapRect = map.getTargetElement().getBoundingClientRect();
 let wrongClicksForCurrentTarget = 0;
 let blinkInterval = null;
 let foundVilles = new Set();
+let isBlinking = false;
 
 
 // styles réponses
@@ -231,6 +232,7 @@ function getCookie(name) {
 
 
 function endGame(){
+  isBlinking = false
   tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
     if (blinkInterval) {
     clearInterval(blinkInterval);
@@ -340,6 +342,7 @@ function initGame() {
   updateGauge()
   wrongClicksForCurrentTarget = 0;
   blinkInterval = null;
+  isBlinking = false
 
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
@@ -430,7 +433,7 @@ map.on('click', function (e) {
       const nomVille = f.get('name')
       const correctStyle = new ol.style.Style({
         text: new ol.style.Text({
-          font: '14px Arial, sans-serif',
+          font: '14px Quicksand, sans-serif',
           text: nomVille, // Use the 'name' property as the label
           fill: new ol.style.Fill({
           color: '#000', // Text color
@@ -451,6 +454,7 @@ map.on('click', function (e) {
         return true;
       }
       if (nomVille === currentTarget){
+        isBlinking = false;
         f.setStyle(correctStyle);
         listeVilles = listeVilles.filter(v => v !== nomVille);
         foundVilles.add(nomVille);
@@ -483,17 +487,19 @@ map.on('click', function (e) {
         if (wrongClicksForCurrentTarget >= 1 && !blinkInterval) {
             startBlinkingCurrentTarget();
             essais = Math.max(0, essais - 1);
-        const tooltip = $('#tooltipFalse');
-        tooltip.text(nomVille);
-        tooltip.css({
-          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
-          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
-          display: 'block'
+          } if (wrongClicksForCurrentTarget > 1 ) {
+            isBlinking = true; 
+          }
+        if (!isBlinking) {
+            const tooltip = $('#tooltipFalse');
+            tooltip.text(nomVille);
+            tooltip.css({
+              left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+              top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+              display: 'block'
         });
         tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
-        } else {
-        tooltip.style.display = "none"; // le tooltip n'apparait plus une fois que la ville à trouver clignote
-        }
+      }
         document.getElementById('number').innerText = points;
         updateGauge()
         if (essais === 0){
@@ -503,8 +509,6 @@ map.on('click', function (e) {
         }
       }
       //console.log(f.get('name'))
-
-      console.log(f.get('name'))
       return true;
     });
   });

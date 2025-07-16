@@ -11,12 +11,51 @@
 .btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
-  background-color: #007acc;
+  background-color: #161C94;
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
   font-weight: 500;
   transition: background-color 0.2s ease;
+}
+
+.btn-villes {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #a10699;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-GP {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #05750c;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-reg {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #cca518;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+#btn-info {
+  display: inline-block;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .btn:hover {
@@ -87,9 +126,16 @@
   border-radius: 4px;
   bottom: 12px;
   left: -50px;
-  min-width: 100px;
+  min-width: 150px;
   text-align: center;
 }
+
+#popup-content {
+  white-space: nowrap;
+  overflow-x: auto;
+  max-width: 300px; /* Ajuste selon ton besoin */
+}
+
 
 
 /* Adaptation mobile */

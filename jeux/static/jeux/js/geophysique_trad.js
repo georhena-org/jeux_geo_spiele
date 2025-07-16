@@ -63,7 +63,7 @@ const correctStyleHydro= new ol.style.Style({
 function correctStyleSommet(nomEntite) {
   return new ol.style.Style({
         text: new ol.style.Text({
-          font: '14px Arial, sans-serif',
+          font: '14px Quicksand, sans-serif',
           text: nomEntite, // Use the 'name' property as the label
           fill: new ol.style.Fill({
           color: '#000', // Text color
@@ -201,7 +201,6 @@ function randomEncourage() {
 function showRandomText() {
   selected = null;  
   const randomIndex = Math.floor(Math.random() * listeGuess.length);
-  console.log(listeGuess)
   currentTarget = listeGuess[randomIndex];
 
   wrongClicksForCurrentTarget = 0;
@@ -215,12 +214,10 @@ function showRandomText() {
   if (listeSommets.includes(currentTarget)){
   hydroLayer.setVisible(false);
   sommetsLayer.setVisible(true);
-  console.log("couche sommet")
   }
   if (listeHydro.includes(currentTarget)){
   hydroLayer.setVisible(true);
   sommetsLayer.setVisible(false);
-  console.log("couche hydro")
   }
 };
 
@@ -300,7 +297,6 @@ function checkIfAllLoaded() {
     listeNoms = [...new Set([...listeSommets, ...listeHydro])];
 
 let nomsDisponibles = [...listeNoms]; //créer une copie
-console.log(nomsDisponibles)
 listeGuess = [];
 
 for (let i = 0; i < 20 && nomsDisponibles.length > 0; i++) {
@@ -332,6 +328,7 @@ function initGame(){
   featuresCorrectes = new Set();
   wrongClicksForCurrentTarget = 0;
   blinkInterval = null; // Pour mémoriser l'intervalle de clignotement
+  isBlinking = false
 
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
@@ -379,27 +376,20 @@ function initGame(){
   listeNoms = [];
   listeSommets = [];
   features.forEach(f => {
-    //console.log('Sommet :', f.get('name'));
     listeNoms.push(f.get('name'))
     listeSommets.push(f.get('name'))
   });
   sommetsLoaded = true;
-  console.log(listeSommets);  
   checkIfAllLoaded();
-  //console.log(listeSommets)  
-  console.log(listeNoms)
 });
 
 hydroSource.once('featuresloadend', function () {
   const features = hydroSource.getFeatures();
   listeHydro = [];
   features.forEach(f => {
-    console.log('Fleuve :', f.get('name'));
     listeNoms.push(f.get('name'))
     listeHydro.push(f.get('name'))
   });
-  console.log(listeNoms)
-  console.log(listeHydro)
   hydroLoaded = true;
   checkIfAllLoaded();
 });
@@ -414,7 +404,7 @@ function endGame(){
     blinkInterval = null;
   }
   let message = listeGuess.length === 0
-    ? translations[currentLang].winMessage
+    ? translations[currentLang].winMessageGP
     : translations[currentLang].looseMessage;
 
   document.getElementById('finalMessage').innerText = message;
@@ -616,7 +606,6 @@ map.on('click', function (e) {
         }
       }
       //console.log(f.get('name'))
-      console.log(f.get('name'))
       return true;
     });
   });

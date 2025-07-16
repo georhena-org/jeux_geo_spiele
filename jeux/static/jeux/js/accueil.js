@@ -68,6 +68,44 @@ const map = new ol.Map({
 
 
 //Les styles des couches
+
+  // Style rouge pour les villes non trouvées
+  const labeledStyle = function (nomVille) {
+    return new ol.style.Style({
+      text: new ol.style.Text({
+        font: '14px Quicksand, sans-serif',
+        text: nomVille,
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        offsetY: -15,
+      }),
+      image: new ol.style.Circle({
+        radius: 5,
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
+      }),
+    });
+  };
+
+const labeledStyleSommets = function (sommet) {
+    return new ol.style.Style({
+      text: new ol.style.Text({
+        font: '14px Quicksand, sans-serif',
+        text: sommet,
+        fill: new ol.style.Fill({ color: 'rgba(28, 102, 6, 0.8)' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        offsetY: -15,
+      }),
+      image: new ol.style.Circle({
+        radius: 5,
+        fill: new ol.style.Fill({ color: 'rgba(42, 136, 13, 0.8)' }),
+        //stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
+      }),
+    });
+  };
+
+
+
 const originalPointStyle = new ol.style.Style({
   image: new ol.style.Circle({
       radius: 5,
@@ -94,22 +132,17 @@ const hoverLineStyle = new ol.style.Style({
 
 
 
-var villesSource = new ol.source.Vector({
-    url: 'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Avilles_principales&OUTPUTFORMAT=json',
+const villesSource = new ol.source.Vector({
+    url: villesUrl,
     format: new ol.format.GeoJSON(),
   });
+
 
 // charger la couche de points des villes avec le style
 villesLayer = new ol.layer.Vector({
   source: villesSource,
-  style: new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: 5,
-      fill: new ol.style.Fill({ color: 'black' }),
-      stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
-  }),
-  })
 });
+
 
   const sommetsSource = new ol.source.Vector({
     url: sommetsUrl,
@@ -118,7 +151,7 @@ villesLayer = new ol.layer.Vector({
 
   sommetsLayer = new ol.layer.Vector({
   source: sommetsSource,
-  style: originalPointStyle,
+  //style: originalPointStyle,
   });
 
   const hydroSource = new ol.source.Vector({
@@ -154,6 +187,21 @@ hydroLayer.setVisible(false)
 sommetsLayer.setVisible(false)
 regionsLayer.setVisible(false)
 
+villesSource.once('featuresloadend', function () {
+villesLayer.getSource().getFeatures().forEach((feature) => {
+    const nom = feature.get('nom');
+      feature.setStyle(labeledStyle(nom));
+  });
+});
+
+sommetsSource.once('featuresloadend', function () {
+sommetsLayer.getSource().getFeatures().forEach((feature) => {
+    const nom = feature.get('name');
+      feature.setStyle(labeledStyleSommets(nom));
+  });
+});
+
+
 const popupContainer = document.getElementById('popup');
 const popupContent = document.getElementById('popup-content');
 
@@ -162,18 +210,19 @@ const overlay = new ol.Overlay({
   positioning: 'bottom-center',
   stopEvent: false,
 });
+
 map.addOverlay(overlay);
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Scroll doux sur le bouton "Qu’est-ce que le Rhin Supérieur ?"
+  // scroll sur le bouton "Qu’est-ce que le Rhin Supérieur ?"
   const btnInfo = document.getElementById('btn-info');
   btnInfo.addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('webmap').scrollIntoView({ behavior: 'smooth' });
   });
 
-    // Fonction pour gérer affichage de la couche (checkbox)
+    // fonction pour gérer l'affichage de la couche (checkbox)
   function toggleLayer(checkboxId, layerOrLayers) {
     const checkbox = document.getElementById(checkboxId);
     checkbox.addEventListener('change', () => {
@@ -244,22 +293,37 @@ map.on('pointermove', function(evt) {
   let featureFound = false;
 
   map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    let name = feature.get('name'); // essayer d'abord "name"
+    let name = feature.get('name') || feature.get('nom');
+    let photoUrl = feature.get('photo'); // Remplace "photo" par le nom exact du champ
     
-    // Si "name" est undefined ou vide, essayer "nom"
-    if (!name) {
-      name = feature.get('nom');
-    }
-
     if (name) {
       const coordinate = evt.coordinate;
-      popupContent.innerHTML = `<b>${name}</b>`;
+
+      // Vérifie si la couche est sommetsLayer
+      if (layer === sommetsLayer) {
+        let ele = feature.get('ele_num')
+        popupContent.innerHTML = `<b>${name}</b>  <br>Altitude/Höhe: ${ele} m
+          <br>
+          ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:200px; max-height:150px;">` : ''}
+        `;
+
+      } else if (layer === hydroLayer) {
+        let length = feature.get('length_km')
+        popupContent.innerHTML = `<b>${name}</b>  <br>Longueur/Länge: ${length} km`;
+
+      }else {
+        let hab = feature.get('hab_round')
+        let area = feature.get('area_km2')
+        popupContent.innerHTML = `<b>${name}</b><br>Habitants/Einwohnerzahl: ${hab} <br> Superficie/Fläche: ${area} km²<br> 
+          ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:220px; max-height:170px;">` : ''}
+        `;
+      }
+
       overlay.setPosition(coordinate);
       featureFound = true;
     }
   });
 
-  // Si aucune entité trouvée, cacher le popup
   if (!featureFound) {
     overlay.setPosition(undefined);
   }

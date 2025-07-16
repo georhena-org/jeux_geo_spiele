@@ -1,0 +1,26 @@
+{
+"type": "FeatureCollection",
+"name": "villes_principales_pop",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4258" } },
+"xy_coordinate_resolution": 1e-05,
+"features": [
+{ "type": "Feature", "properties": { "id": 4, "nom": "Aarau", "habitant": 21726, "area_ha": 1236, "dens_pop": 1758, "hab_round": 21700, "area_km2": 12.36 }, "geometry": { "type": "Point", "coordinates": [ 8.0582, 47.39341 ] } },
+{ "type": "Feature", "properties": { "id": 82, "nom": "Baden-Baden", "habitant": 55449, "area_ha": 14019, "dens_pop": 396, "hab_round": 55400, "area_km2": 140.19 }, "geometry": { "type": "Point", "coordinates": [ 8.23196, 48.74841 ] } },
+{ "type": "Feature", "properties": { "id": 102, "nom": "Basel", "habitant": 173863, "area_ha": 2389, "dens_pop": 7278, "hab_round": 173900, "area_km2": 23.89 }, "geometry": { "type": "Point", "coordinates": [ 7.5936, 47.55775 ] } },
+{ "type": "Feature", "properties": { "id": 279, "nom": "Colmar", "habitant": 68682, "area_ha": 6646, "dens_pop": 1033, "hab_round": 68700, "area_km2": 66.46 }, "geometry": { "type": "Point", "coordinates": [ 7.38489, 48.10995 ] } },
+{ "type": "Feature", "properties": { "id": 299, "nom": "Dahn", "habitant": 4572, "area_ha": 4076, "dens_pop": 112, "hab_round": 4600, "area_km2": 40.76 }, "geometry": { "type": "Point", "coordinates": [ 7.75983, 49.1469 ] } },
+{ "type": "Feature", "properties": { "id": 311, "nom": "Delémont", "habitant": 12618, "area_ha": 2201, "dens_pop": 573, "hab_round": 12600, "area_km2": 22.01 }, "geometry": { "type": "Point", "coordinates": [ 7.3329, 47.3751 ] } },
+{ "type": "Feature", "properties": { "id": 483, "nom": "Freiburg im Breisgau", "habitant": 230940, "area_ha": 15304, "dens_pop": 1509, "hab_round": 230900, "area_km2": 153.04 }, "geometry": { "type": "Point", "coordinates": [ 7.81849, 47.99265 ] } },
+{ "type": "Feature", "properties": { "id": 599, "nom": "Haguenau", "habitant": 35196, "area_ha": 18365, "dens_pop": 192, "hab_round": 35200, "area_km2": 183.65 }, "geometry": { "type": "Point", "coordinates": [ 7.78433, 48.82275 ] } },
+{ "type": "Feature", "properties": { "id": 765, "nom": "Karlsruhe", "habitant": 308436, "area_ha": 17342, "dens_pop": 1779, "hab_round": 308400, "area_km2": 173.42 }, "geometry": { "type": "Point", "coordinates": [ 8.41266, 49.01153 ] } },
+{ "type": "Feature", "properties": { "id": 825, "nom": "Lörrach", "habitant": 49295, "area_ha": 3937, "dens_pop": 1252, "hab_round": 49300, "area_km2": 39.37 }, "geometry": { "type": "Point", "coordinates": [ 7.68396, 47.62802 ] } },
+{ "type": "Feature", "properties": { "id": 845, "nom": "Landau in der Pfalz", "habitant": 46685, "area_ha": 8294, "dens_pop": 563, "hab_round": 46700, "area_km2": 82.94 }, "geometry": { "type": "Point", "coordinates": [ 8.11006, 49.19613 ] } },
+{ "type": "Feature", "properties": { "id": 897, "nom": "Liestal", "habitant": 14769, "area_ha": 1817, "dens_pop": 813, "hab_round": 14800, "area_km2": 18.17 }, "geometry": { "type": "Point", "coordinates": [ 7.72568, 47.48541 ] } },
+{ "type": "Feature", "properties": { "id": 1029, "nom": "Mulhouse", "habitant": 108312, "area_ha": 2237, "dens_pop": 4842, "hab_round": 108300, "area_km2": 22.37 }, "geometry": { "type": "Point", "coordinates": [ 7.32543, 47.749 ] } },
+{ "type": "Feature", "properties": { "id": 1149, "nom": "Offenburg", "habitant": 60388, "area_ha": 7837, "dens_pop": 771, "hab_round": 60400, "area_km2": 78.37 }, "geometry": { "type": "Point", "coordinates": [ 7.94343, 48.47776 ] } },
+{ "type": "Feature", "properties": { "id": 1224, "nom": "Rastatt", "habitant": 50165, "area_ha": 5898, "dens_pop": 851, "hab_round": 50200, "area_km2": 58.98 }, "geometry": { "type": "Point", "coordinates": [ 8.18499, 48.8631 ] } },
+{ "type": "Feature", "properties": { "id": 1448, "nom": "Solothurn", "habitant": 16802, "area_ha": 625, "dens_pop": 2688, "hab_round": 16800, "area_km2": 6.25 }, "geometry": { "type": "Point", "coordinates": [ 7.53005, 47.20834 ] } },
+{ "type": "Feature", "properties": { "id": 1498, "nom": "Strasbourg", "habitant": 287228, "area_ha": 7822, "dens_pop": 3672, "hab_round": 287200, "area_km2": 78.22 }, "geometry": { "type": "Point", "coordinates": [ 7.76777, 48.57125 ] } },
+{ "type": "Feature", "properties": { "id": 1612, "nom": "Waldshut-Tiengen", "habitant": 24067, "area_ha": 7796, "dens_pop": 309, "hab_round": 24100, "area_km2": 77.96 }, "geometry": { "type": "Point", "coordinates": [ 8.24293, 47.65189 ] } }
+]
+}

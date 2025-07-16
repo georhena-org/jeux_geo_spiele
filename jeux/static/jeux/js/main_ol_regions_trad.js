@@ -55,11 +55,6 @@ const map = new ol.Map({
 });
 
 
-// afficher les coordonnées au clic dans la console
-//map.on('click', function(e){
-//  console.log(e.coordinate)
-//});
-
 // variables globales du jeu 
 let regionsLayer = null
 let listeRegions = [];
@@ -84,8 +79,8 @@ const hoverStyle = new ol.style.Style({
       });
 
 const correctStyle = new ol.style.Style({
-        fill: new ol.style.Fill({ color: 'rgba(192, 235, 215, 0.64)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
+        fill: new ol.style.Fill({ color: 'rgba(211, 232, 222, 0.64)' }),
+      stroke: new ol.style.Stroke({ color: 'rgba(154, 147, 147, 0.99)', width: 2 }),
       });
 
 // Style rouge pour les régions non trouvées
@@ -103,17 +98,45 @@ function styleByType(feature) {
 
   switch (type) {
     case "Landkreis":
-      fillColor = "rgba(15, 172, 98, 0.64)";
-      strokeColor = "rgba(15, 172, 99, 0.99)";
+      fillColor = "rgba( 255, 226, 139, 0.70 )";
+      strokeColor = "rgba(228, 192, 82, 1)";
       break;
     case "canton":
-      fillColor = "rgba(0, 123, 255, 0.5)";
-      strokeColor = "rgba(0, 123, 255, 1)";
+      fillColor = "rgba( 220, 146, 215, 0.70 )";
+      strokeColor = "rgba(220, 146, 215, 1)";
       break;
     case "collectivité":
     default:
-      fillColor = "rgba(255, 193, 7, 0.5)";
-      strokeColor = "rgba(255, 193, 7, 1)";
+      fillColor = "rgba(175, 224, 193, 1)";
+      strokeColor = "rgba(137, 202, 161, 1)";
+      break;
+  }
+
+  return new ol.style.Style({
+    fill: new ol.style.Fill({ color: fillColor }),
+    stroke: new ol.style.Stroke({ color: strokeColor, width: 2 }),
+  });
+}
+
+function hoverByType(feature) {
+  const nuts3 = feature.get("nuts3");
+  const type = detectTypeFromNUTS(nuts3);
+
+  let fillColor, strokeColor;
+
+  switch (type) {
+    case "Landkreis":
+      fillColor = "rgba(113, 96, 42, 0.7)";
+      strokeColor = "rgba(228, 192, 82, 1)";
+      break;
+    case "canton":
+      fillColor = "rgba(123, 50, 119, 0.7)";
+      strokeColor = "rgba(220, 146, 215, 1)";
+      break;
+    case "collectivité":
+    default:
+      fillColor = "rgba(43, 105, 66, 1)";
+      strokeColor = "rgba(137, 202, 161, 1)";
       break;
   }
 
@@ -287,7 +310,7 @@ function endGame(){
   //tooltipFalse.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
 
   let message = listeRegions.length === 0
-    ? translations[currentLang].winMessage
+    ? translations[currentLang].winMessageREG
     : translations[currentLang].looseMessage;
 
   document.getElementById('finalMessage').innerText = message;
@@ -376,17 +399,14 @@ map.on('pointermove', function (e) {
     if (selected) {
       const nom = selected.get('nom');
       if (!listeRegions.includes(nom)) {
-        selected.setStyle(new ol.style.Style({
-        fill: new ol.style.Fill({ color: 'rgba(115, 191, 156, 0.64)' }),
-        stroke: new ol.style.Stroke({ color: 'rgba(15, 172, 99, 0.99)', width: 2 }),
-      }));
+        selected.setStyle(hoverStyle);
       } else if (gameEnded && listeRegions.includes(nom)) {
         selected.setStyle(new ol.style.Style({
           fill: new ol.style.Fill({ color: 'rgba(226, 170, 170, 0.84)' }),
           stroke: new ol.style.Stroke({ color: 'rgba(141, 29, 29, 0.99)', width: 2 }),
       }));
       } else {
-      selected.setStyle(hoverStyle);
+      selected.setStyle(hoverByType);
       }
       } else {
       tooltip.style.display = 'none';

@@ -7,9 +7,20 @@
     btnPhysGeo: "🏞️ Géographie physique du Rhin Supérieur",
     btnRegions: "🏘️ Les collectivités du Rhin Supérieur",
     btnRhenaGuessr: "📍 RhenaGuessr",
+    btnInfo: "❓ Qu’est-ce que le Rhin Supérieur ?",
+    pres1 : "Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un jeu pour commencer à jouer.",
+    pres2 : "Vous n'avez encore jamais entendu parler du Rhin Supérieur? Découvrez le territoire puis testez vos connaissances !",
+    aproposRS : "À propos du Rhin Supérieur",
+    apropostext : "Le Rhin Supérieur est une région transfrontalière située entre la France, l’Allemagne et la Suisse.",
+    toggleVilles : "Explorer les villes principales",
+    toggleGP : "Explorer les sommets et les cours d'eau",
+    toggleRegions : "Explorer les collectivités",
     title: "Les villes principales du Rhin Supérieur",
     titleGP: "Géographie physique du Rhin Supérieur",
     titleReg: "Les collectivités du Rhin Supérieur",
+    villesInfo: "18 villes sont considérées comme prinicipales. Découvrez leur nom, le nombre d'habitants (2020) et la superficie de la commune à laquelle elles appartiennent.",
+    GPInfo: "Ici s'affichent des sommets et points de vue emblématiques ainsi que les cours d'eau principaux du territoire.",
+    regionsInfo: "Le Rhin Supérieur est composé de 2 départements français (qui forment la collectivité eauropéenne d'Alsace), 14 Landkreise allemands et 5 cantons suisses.",
     restart: "Rejouer",
     explore: "Explorer la donnée",
     tries: "Essais restants:",
@@ -24,6 +35,8 @@
     },
     winMessage: "🎉 Bravo ! Toutes les villes ont été trouvées !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
+    winMessageGP: "🎉 Bravo ! Tu as su identifier 20 rivières et sommets !",
+    winMessageREG: "🎉 Bravo ! Tu as trouvé toutes les collectivités membres du Rhin Supérieur !",
     finalScore: "Score final :",
     finalTries: "Nombre d'essais utilisés :",
     finalTime: "Temps écoulé :",
@@ -36,6 +49,17 @@
     btnPhysGeo: "🏞️ Physische Geographie des Oberrheins",
     btnRegions: "🏘️ Die Gebietskörperschaften des Oberrheins",
     btnRhenaGuessr: "📍 RhenaGuessr",
+    btnInfo: "❓ Was ist denn der Oberrheingebiet ?",
+    pres1 : "Willkommen auf der Plattform für Geospiele am Oberrhein! Klicken Sie auf ein Spiel, um mit dem Spielen zu beginnen.",
+    pres2 : "Sie haben noch nie vom Oberrheingebiet gehört? Entdecken Sie das Gebiet und testen Sie dann Ihr Wissen!",
+    aproposRS : "Zum Oberrheingebiet",
+    apropostext : "Der Oberrhein ist eine grenzüberschreitende Region zwischen Frankreich, Deutschland und der Schweiz.",
+    toggleVilles : "Die Städte des Oberrheins entdecken",
+    toggleGP : "Gipfel und Wasserläufe entdecken",
+    toggleRegions : "Gebietskörperschaften entdecken",
+    villesInfo: "18 Städte werden als zentral angesehen. Hier finden Sie ihre Namen, die Einwohnerzahl (2020) und die Fläche der Gemeinde, zu der sie gehören.",
+    GPInfo: "Hier werden markante Gipfel und Aussichtspunkte sowie die wichtigsten Wasserläufe des Gebiets angezeigt.",
+    regionsInfo: "Der Oberrhein besteht aus 2 französischen Departements (die die collectivité européenne d'Alsace bilden), 14 deutschen Landkreisen und 5 Schweizer Kantonen.",
     title: "Städte des Oberrheins",
     titleGP: "Physische Geographie des Oberrheins",
     titleReg: "Die Gebietskörperschaften des Oberrheins",
@@ -51,8 +75,10 @@
       if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
        return `Wo liegt ${feat}?`;
     },
-    winMessage: "🎉 Bravo! Alle Städte wurden gefunden!",
+    winMessage: "🎉 Glückwunsch! Alle Städte wurden gefunden!",
     looseMessage: "😔 Schade... Versuch es nochmal, du bist fast da!",
+    winMessageGP: "🎉 Glückwunsch ! Du hast die 20 Flüsse und Berge gefunden !",
+    winMessageREG: "🎉 Glückwunsch ! Alle  Gebietskörperschaften wurden gefunden! !",
     finalScore: "Endpunktzahl :",
     finalTries: "Verwendete Versuche :",
     finalTime: "Vergangene Zeit :",
@@ -69,6 +95,20 @@ function setLanguage(lang) {
   $("#jeu-geophysique").text(translations[lang].btnPhysGeo);
   $("#jeu-regions").text(translations[lang].btnRegions);
   $("#jeu-RhenaGuessr").text(translations[lang].btnRhenaGuessr);
+  $("#btn-info").text(translations[lang].btnInfo);
+
+  $("#pres-1").text(translations[lang].pres1);
+  $("#pres-2").text(translations[lang].pres2);
+  $("#a-propos-RS").text(translations[lang].aproposRS);
+  $("#a-propos-text").text(translations[lang].apropostext);
+  
+  document.querySelector('#t-Villes').lastChild.textContent = translations[lang].toggleVilles;
+  document.querySelector('#t-GP').lastChild.textContent = translations[lang].toggleGP;
+  document.querySelector('#t-Regions').lastChild.textContent = translations[lang].toggleRegions;
+
+  $("#villesInfo").text(translations[lang].villesInfo);
+  $("#geophysiqueInfo").text(translations[lang].GPInfo);
+  $("#regionsInfo").text(translations[lang].regionsInfo);
 
   $("#page-title").text(translations[lang].title);
   $("#page-title-GP").text(translations[lang].titleGP);

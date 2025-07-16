@@ -11,13 +11,32 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: #004466; /* exemple de couleur de fond */
+  background-color: #161C94; 
 }
 
-.header-left, .header-center, .header-right {
+.header-left, .header-center {
   display: flex;
   align-items: center;
 }
+
+.header-right button {
+  display: inline-block;
+  font-family: 'Quicksand', sans-serif;
+  padding: 0.6rem 1.2rem;
+  background-color: #ffffff;
+  color: #161C94;
+  text-decoration: none;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.header-right button:hover {
+  background-color: #696ec8;
+  color: white;
+}
+
 
 .header-center {
   flex: 1;
@@ -25,9 +44,16 @@ header {
 }
 
 .home-icon {
-  width: 40px; /* adapte selon la taille de ton SVG */
-  height: auto;
-  cursor: pointer;
+  background-color: white;
+  width:40px;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.home-icon:hover {
+  transform: scale(1.1);
 }
 
 #main-title {
@@ -57,7 +83,7 @@ main {
 }
 
 footer {
-  background-color: #004466;
+  background-color: #161C94;
   color: white;
   text-align: center;
   padding: 1rem;
