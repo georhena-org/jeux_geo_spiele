@@ -29,6 +29,18 @@ var crsLayer = new ol.layer.Vector({
   }),
 });
 
+const villesSource = new ol.source.Vector({
+    url: 'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Avilles_principales&OUTPUTFORMAT=json',
+    format: new ol.format.GeoJSON(),
+  });
+
+
+// charger la couche de points des villes avec le style
+villesLayer = new ol.layer.Vector({
+  source: villesSource,
+});
+
+
 
 //Les styles des couches
 const originalPointStyle = new ol.style.Style({
@@ -82,30 +94,31 @@ function correctStyleSommet(nomEntite) {
       });
 }
 
+ const labeledStyle = function (nomVille) {
+    return new ol.style.Style({
+      text: new ol.style.Text({
+        font: '14px Quicksand, sans-serif',
+        text: nomVille,
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        offsetY: -15,
+      }),
+      image: new ol.style.Circle({
+        radius: 5,
+        fill: new ol.style.Fill({ color: 'black' }),
+        stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
+      }),
+    });
+  };
+
 
 // Masquer la basemap XYZ
 
 
-// Ajouter une couche WMS depuis Georhena
-const georhenaWMS = new ol.layer.Tile({
-  source: new ol.source.TileWMS({
-    url: 'https://geoportal.georhena.eu/geoserver/basemaps/ows?',
-    params: {
-      'LAYERS': 'basemaps:mnt_dem',
-      'TILED': true,
-      'VERSION': '1.3.0',
-      'FORMAT': 'image/png',
-      'TRANSPARENT': true,
-    },
-    serverType: 'geoserver',
-    crossOrigin: 'anonymous',
-  })
-});
-
 // Ajouter la carte
 const map = new ol.Map({
   target: 'webmap',
-  layers: [basemap, crsLayer], //ombrageLayer
+  layers: [basemap, crsLayer, villesLayer], //ombrageLayer
   view: new ol.View({
     center: [
     7.772542083975405,
@@ -117,8 +130,14 @@ const map = new ol.Map({
   }),
 });
 
+villesSource.once('featuresloadend', function () {
+villesLayer.getSource().getFeatures().forEach((feature) => {
+    const nom = feature.get('name');
+      feature.setStyle(labeledStyle(nom));
+  });
+});
 
-
+villesLayer.setVisible(false)
 
 let sommetsLayer = null;
 let hydroLayer = null;
@@ -135,10 +154,10 @@ let elapsedTime = 0;
 let gameActive = false
 let points = 0;
 let essais = 5;
+let finalTries = 0;
 const mapRect = map.getTargetElement().getBoundingClientRect();
 let isBlinking = false;
-
-
+const nomToType = {};
 
 
 function formatTime(seconds) {
@@ -187,14 +206,14 @@ function showEncouragementMessage(text) {
 
 function randomCongrats() {
   //const congrats = ["Bien joué !", "Incroyable", "Bravo"];
-  const randomId = Math.floor(Math.random() * translations[currentLang].encouragements.length);
-  showEncouragementMessage(translations[currentLang].encouragements[randomId]);
+  const randomId = Math.floor(Math.random() * translate[currentLang].encouragements.length);
+  showEncouragementMessage(translate[currentLang].encouragements[randomId]);
 }
 
 function randomEncourage() {
   //const messages = ["Essaie encore !", "Presque", "Pas loin !"];
-  const randomId = Math.floor(Math.random() * translations[currentLang].retryMessages.length);
-  showEncouragementMessage(translations[currentLang].retryMessages[randomId]);
+  const randomId = Math.floor(Math.random() * translate[currentLang].retryMessages.length);
+  showEncouragementMessage(translate[currentLang].retryMessages[randomId]);
 }
 
 
@@ -209,7 +228,7 @@ function showRandomText() {
     blinkInterval = null;
   }
 
-  document.getElementById('randomText').innerText = translations[currentLang].guessText(currentTarget);
+  document.getElementById('randomText').innerText = translate[currentLang].guessText(currentTarget);
 
   if (listeSommets.includes(currentTarget)){
   hydroLayer.setVisible(false);
@@ -324,6 +343,7 @@ function initGame(){
 
   points = 0;
   essais = 5;
+  finalTries = 0;
   updateGauge()
   featuresCorrectes = new Set();
   wrongClicksForCurrentTarget = 0;
@@ -378,6 +398,9 @@ function initGame(){
   features.forEach(f => {
     listeNoms.push(f.get('name'))
     listeSommets.push(f.get('name'))
+    const nom = f.get('name')
+    const type = f.get('natural')
+    nomToType[nom] = type;
   });
   sommetsLoaded = true;
   checkIfAllLoaded();
@@ -389,6 +412,9 @@ hydroSource.once('featuresloadend', function () {
   features.forEach(f => {
     listeNoms.push(f.get('name'))
     listeHydro.push(f.get('name'))
+    const nom = f.get('name')
+    const type = f.get('type')
+    nomToType[nom] = type;
   });
   hydroLoaded = true;
   checkIfAllLoaded();
@@ -399,18 +425,19 @@ function endGame(){
   isBlinking = false
   hydroLayer.setVisible(true);
   sommetsLayer.setVisible(true);
+  finalTries = 5 - essais
   if (blinkInterval) {
     clearInterval(blinkInterval);
     blinkInterval = null;
   }
   let message = listeGuess.length === 0
-    ? translations[currentLang].winMessageGP
-    : translations[currentLang].looseMessage;
+    ? translate[currentLang].winMessageGP
+    : translate[currentLang].looseMessage;
 
   document.getElementById('finalMessage').innerText = message;
-  document.getElementById('finalScore').innerText = `${translations[currentLang].finalScore} ${points}`;
-  document.getElementById('finalTries').innerText = `${translations[currentLang].finalTries} ${5 - essais}`;
-  document.getElementById('finalTime').innerText = `${translations[currentLang].finalTime} ${formatTime(elapsedTime)}`;
+  document.getElementById('finalScore').innerText = `${translate[currentLang].finalScore} ${points}`;
+  document.getElementById('finalTries').innerText = `${translate[currentLang].finalTries} ${5 - essais}`;
+  document.getElementById('finalTime').innerText = `${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`;
 
   // Montrer l'encart
   document.getElementById('endGameMessage').style.display = "block";
@@ -425,7 +452,10 @@ function endGame(){
   document.getElementById('encouragments').style.display = "none";
   document.getElementById('chrono').innerText = "";
 
-  fetch('/api/save_score/', {
+ const baseUrl = window.location.origin; 
+ console.log(baseUrl)
+
+  fetch(`${baseUrl}/api/save_score/`,  {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -434,6 +464,7 @@ function endGame(){
     body: JSON.stringify({
       game: 'geophysique',
       score: points,
+      tries: finalTries,
       time_seconds: elapsedTime
     })
   })
@@ -449,6 +480,20 @@ function endGame(){
 
 }
 
+    // fonction pour gérer l'affichage de la couche (checkbox)
+  function toggleLayer(checkboxId, layerOrLayers) {
+    const checkbox = document.getElementById(checkboxId);
+    checkbox.addEventListener('change', () => {
+      const visible = checkbox.checked;
+      if (Array.isArray(layerOrLayers)) {
+        layerOrLayers.forEach(layer => layer.setVisible(visible));
+      } else {
+        layerOrLayers.setVisible(visible);
+      }
+    });
+  }
+
+  toggleLayer('toggleLayer', villesLayer);
 
 
 // Gestion de l'événement de survol
@@ -462,7 +507,7 @@ const tooltipFalse = document.getElementById('tooltipFalse');
 map.on('pointermove', function (e) {
   //if (!tooltipToggle.checked) return;
 
-  // Réinitialiser le style du précédent élément survolé (s'il n'était pas une bonne réponse)
+  // Réinitialiser le style du précédent élément survolé 
   if (selected !== null && !featuresCorrectes.has(selected)) {
     selected.setStyle(undefined);
     selected = null;
@@ -470,9 +515,13 @@ map.on('pointermove', function (e) {
 
   let featureFound = false;
 
-  map.forEachFeatureAtPixel(e.pixel, function (f) {
+  map.forEachFeatureAtPixel(e.pixel, function (f, layer) {
+
+    if (layer === villesLayer) return;
+
     const nomFeat = f.get('name');
     if (!nomFeat) return true;
+
 
     selected = f; // mémoriser la feature
 
@@ -489,7 +538,6 @@ map.on('pointermove', function (e) {
         });
       }
       } else {
-        // sommet trouvé : il a déjà son label, on ne montre pas le tooltip flottant
         tooltip.style.display = "none";
       }
     } else if (listeHydro.includes(nomFeat)) {
@@ -577,12 +625,12 @@ map.on('click', function (e) {
         return;
     }
       }else{
-        points = Math.max(0, points - 50);
         randomEncourage();
         wrongClicksForCurrentTarget++;
         if (wrongClicksForCurrentTarget >= 3 && !blinkInterval) {
             startBlinkingCurrentTarget();
             essais = Math.max(0, essais - 1);
+            points = Math.max(0, points - 50);
           } if (wrongClicksForCurrentTarget > 3 ) {
             isBlinking = true; 
           }

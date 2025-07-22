@@ -63,6 +63,8 @@ const map = new ol.Map({
     48.234177921525884
     ],
     zoom: 8,
+    minZoom: 5.5,
+    maxZoom: 15,
   }),
 });
 
@@ -130,6 +132,42 @@ const hoverLineStyle = new ol.style.Style({
     stroke: new ol.style.Stroke({ color: 'rgba(34, 130, 168, 0.99)', width: 3 }),
 });
 
+function detectTypeFromNUTS(nuts3) {
+  if (!nuts3) return null;
+  if (nuts3.startsWith("CH")) return "Canton/Kanton";
+  if (nuts3.startsWith("DE")) return "Landkreis";
+  return null;
+}
+
+function styleByType(feature) {
+  const nuts3 = feature.get("nuts3");
+  const type = detectTypeFromNUTS(nuts3);
+
+  let fillColor, strokeColor;
+
+  switch (type) {
+    case "Landkreis":
+      fillColor = "rgba( 255, 226, 139, 0.70 )";
+      strokeColor = "rgba(228, 192, 82, 1)";
+      break;
+    case "Canton/Kanton":
+      fillColor = "rgba( 220, 146, 215, 0.70 )";
+      strokeColor = "rgba(220, 146, 215, 1)";
+      break;
+    
+    default:
+      fillColor = "rgba(175, 224, 193, 1)";
+      strokeColor = "rgba(137, 202, 161, 1)";
+      break;
+  }
+
+  return new ol.style.Style({
+    fill: new ol.style.Fill({ color: fillColor }),
+    stroke: new ol.style.Stroke({ color: strokeColor, width: 2 }),
+  });
+}
+
+
 
 
 const villesSource = new ol.source.Vector({
@@ -172,10 +210,7 @@ const regionsSource = new ol.source.Vector({
 // charger la couche de points des régions avec le style
 regionsLayer = new ol.layer.Vector({
   source: regionsSource,
-  style: new ol.style.Style({
-      fill: new ol.style.Fill({ color: 'rgba(233, 183, 139, 0.53)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(199, 112, 37, 0.99)', width: 2 }),
-  }),
+  style: styleByType,
 });
 
 map.addLayer(regionsLayer);  
@@ -222,6 +257,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('webmap').scrollIntoView({ behavior: 'smooth' });
   });
 
+  const btnPlay = document.getElementById('play-button');
+  btnPlay.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('button-group-title').scrollIntoView({ behavior: 'smooth' });
+  });
+
     // fonction pour gérer l'affichage de la couche (checkbox)
   function toggleLayer(checkboxId, layerOrLayers) {
     const checkbox = document.getElementById(checkboxId);
@@ -262,69 +303,59 @@ document.addEventListener('DOMContentLoaded', () => {
   toggleInfo('regionsHeader', 'arrowRegions', 'regionsInfo');
 });
 
-map.on('singleclick', function(evt) {
-  let featureFound = false;
 
-  map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    let name = feature.get('name'); // essayer d'abord "name"
-    
-    // Si "name" est undefined ou vide, essayer "nom"
-    if (!name) {
-      name = feature.get('nom');
-    }
-
-    if (name) {
-      const coordinate = evt.coordinate;
-      popupContent.innerHTML = `<b>${name}</b>`;
-      overlay.setPosition(coordinate);
-      featureFound = true;
-    }
-  });
-
-  // Si aucune entité trouvée, cacher le popup
-  if (!featureFound) {
-    overlay.setPosition(undefined);
-  }
-});
 
 map.on('pointermove', function(evt) {
   const hit = map.hasFeatureAtPixel(evt.pixel);
   map.getTargetElement().style.cursor = hit ? 'pointer' : '';
-  let featureFound = false;
+  let features = [];
 
   map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    let name = feature.get('name') || feature.get('nom');
-    let photoUrl = feature.get('photo'); // Remplace "photo" par le nom exact du champ
-    
-    if (name) {
-      const coordinate = evt.coordinate;
-
-      // Vérifie si la couche est sommetsLayer
-      if (layer === sommetsLayer) {
-        let ele = feature.get('ele_num')
-        popupContent.innerHTML = `<b>${name}</b>  <br>Altitude/Höhe: ${ele} m
-          <br>
-          ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:200px; max-height:150px;">` : ''}
-        `;
-
-      } else if (layer === hydroLayer) {
-        let length = feature.get('length_km')
-        popupContent.innerHTML = `<b>${name}</b>  <br>Longueur/Länge: ${length} km`;
-
-      }else {
-        let hab = feature.get('hab_round')
-        let area = feature.get('area_km2')
-        popupContent.innerHTML = `<b>${name}</b><br>Habitants/Einwohnerzahl: ${hab} <br> Superficie/Fläche: ${area} km²<br> 
-          ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:220px; max-height:170px;">` : ''}
-        `;
-      }
-
-      overlay.setPosition(coordinate);
-      featureFound = true;
-    }
+    features.push({ feature, layer });
   });
 
-  if (!featureFound) {
+  if (features.length === 0) {
+    overlay.setPosition(undefined);
+    return;
+  }
+
+  const coordinate = evt.coordinate;
+
+  // Priorité manuelle
+  const priorityOrder = [sommetsLayer, hydroLayer, villesLayer, regionsLayer];
+  let selected = null;
+
+  for (let layer of priorityOrder) {
+    selected = features.find(f => f.layer === layer);
+    if (selected) break;
+  }
+
+  if (selected) {
+    const { feature, layer } = selected;
+    let name = feature.get('name') || feature.get('nom');
+    let photoUrl = feature.get('photo');
+
+    if (layer === sommetsLayer) {
+      let ele = feature.get('ele_num');
+      popupContent.innerHTML = `<b>${name}</b><br>Altitude/Höhe: ${ele} m<br>
+        ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:200px; max-height:150px;">` : ''}`;
+    } else if (layer === hydroLayer) {
+      let length = feature.get('length_km');
+      popupContent.innerHTML = `<b>${name}</b><br>Longueur/Länge: ${length} km`;
+    } else if (layer === villesLayer) {
+      let hab = feature.get('hab_round');
+      let area = feature.get('area_km2');
+      popupContent.innerHTML = `<b>${name}</b><br>Habitants/Einwohnerzahl: ${hab}<br>Superficie/Fläche: ${area} km²<br>
+        ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:220px; max-height:170px;">` : ''}`;
+    } else if (layer === regionsLayer) {
+      const nuts3 = feature.get("nuts3");
+      const type = detectTypeFromNUTS(nuts3);
+      popupContent.innerHTML = type ? `<b>${type}</b><br>${name}`: `${name}`;
+    }
+
+    overlay.setPosition(coordinate);
+  }
+  if (!selected) {
     overlay.setPosition(undefined);
   }
 });

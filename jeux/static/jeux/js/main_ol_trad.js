@@ -3,7 +3,7 @@ ol.proj.useGeographic();
 
 const basemap = new ol.layer.Tile({
   source: new ol.source.XYZ({
-    url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager_no_labels_no_buildings/{z}/{x}/{y}{r}.png',
+    url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/light_nolabels/{z}/{x}/{y}{r}.png',
     attributions: '© OpenStreetMap contributors © CARTO'
   })
 });
@@ -30,7 +30,7 @@ var crsLayer = new ol.layer.Vector({
   source: crsSource,
   //background: 'black',
   style: new ol.style.Style({
-      fill: new ol.style.Fill({ color: 'rgba(159, 79, 196, 0.64)' }),
+      fill: new ol.style.Fill({ color: 'rgba(159, 79, 196, 0.4)' }),
       stroke: new ol.style.Stroke({ color: 'purple', width: 2 }),
   }),
 });
@@ -49,24 +49,10 @@ var paysLayer = new ol.layer.Vector({
   //background: 'black',
   style: new ol.style.Style({
       fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(235, 209, 81, 0.84)', width: 2 }),
+      stroke: new ol.style.Stroke({ color: 'rgba(247, 217, 46, 0.91)', width: 3 }),
   }),
 });
 
-//const ombrageLayer = new ol.layer.Tile({
-  //source: new ol.source.TileWMS({
-    //url: 'https://geoportal.georhena.eu/geoserver/basemaps/ows',
-    //params: {
-      //'LAYERS': 'basemaps:relief_ombrage',
-      //'TILED': true,
-      //'VERSION': '1.3.0',
-      //'FORMAT': 'image/png',
-      //'TRANSPARENT': true
-    //},
-    //serverType: 'geoserver',
-    //crossOrigin: 'anonymous'
-  //})
-//});
 
 const map = new ol.Map({
   target: 'webmap',
@@ -83,10 +69,6 @@ const map = new ol.Map({
 });
 
 
-// afficher les coordonnées au clic dans la console
-//map.on('click', function(e){
-//  console.log(e.coordinate)
-//});
 
 // variables globales du jeu
 let villesLayer = null
@@ -98,6 +80,7 @@ let gameActive = false
 let selected = null;
 let points = 0;
 let essais = 5;
+let finalTries = 0;
 const mapRect = map.getTargetElement().getBoundingClientRect();
 let wrongClicksForCurrentTarget = 0;
 let blinkInterval = null;
@@ -162,15 +145,14 @@ function showEncouragementMessage(text) {
 }
 
 function randomCongrats() {
-  //const congrats = ["Bien joué !", "Incroyable", "Bravo"];
-  const randomId = Math.floor(Math.random() * translations[currentLang].encouragements.length);
-  showEncouragementMessage(translations[currentLang].encouragements[randomId]);
+  const randomId = Math.floor(Math.random() * translate[currentLang].encouragements.length);
+  showEncouragementMessage(translate[currentLang].encouragements[randomId]);
 }
 
 function randomEncourage() {
   //const messages = ["Essaie encore !", "Presque", "Pas loin !"];
-  const randomId = Math.floor(Math.random() * translations[currentLang].retryMessages.length);
-  showEncouragementMessage(translations[currentLang].retryMessages[randomId]);
+  const randomId = Math.floor(Math.random() * translate[currentLang].retryMessages.length);
+  showEncouragementMessage(translate[currentLang].retryMessages[randomId]);
 }
 
 function startBlinkingCurrentTarget() {
@@ -234,18 +216,18 @@ function getCookie(name) {
 function endGame(){
   isBlinking = false
   tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
-    if (blinkInterval) {
+  if (blinkInterval) {
     clearInterval(blinkInterval);
     blinkInterval = null;
   }
   let message = listeVilles.length === 0
-    ? translations[currentLang].winMessage
-    : translations[currentLang].looseMessage;
+    ? translate[currentLang].winMessage
+    : translate[currentLang].looseMessage;
 
   document.getElementById('finalMessage').innerText = message;
-  document.getElementById('finalScore').innerText = `${translations[currentLang].finalScore} ${points}`;
-  document.getElementById('finalTries').innerText = `${translations[currentLang].finalTries} ${5 - essais}`;
-  document.getElementById('finalTime').innerText = `${translations[currentLang].finalTime} ${formatTime(elapsedTime)}`;
+  document.getElementById('finalScore').innerText = `${translate[currentLang].finalScore} ${points}`;
+  document.getElementById('finalTries').innerText = `${translate[currentLang].finalTries} ${5 - essais}`;
+  document.getElementById('finalTime').innerText = `${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`;
   
   // Montrer l'encart
   document.getElementById('endGameMessage').style.display = "block";
@@ -285,8 +267,10 @@ function endGame(){
       feature.setStyle(missedStyle(nom));
     }
   });
+const baseUrl = window.location.origin; 
+console.log(baseUrl)
 
-  fetch('/api/save_score/', {
+  fetch(`${baseUrl}/api/save_score/`,  {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -295,6 +279,7 @@ function endGame(){
     body: JSON.stringify({
       game: 'villes',
       score: points,
+      tries: finalTries,
       time_seconds: elapsedTime
     })
   })
@@ -319,7 +304,7 @@ function showRandomText() {
       clearInterval(blinkInterval);
       blinkInterval = null;
     }
-    document.getElementById('randomText').innerText = translations[currentLang].guessText(currentTarget);
+    document.getElementById('randomText').innerText = translate[currentLang].guessText(currentTarget);
 };
 
 function updateGauge() {
@@ -339,6 +324,7 @@ function initGame() {
   foundVilles.clear();
   points = 0;
   essais = 5;
+  finalTries = 0;
   updateGauge()
   wrongClicksForCurrentTarget = 0;
   blinkInterval = null;
@@ -392,10 +378,7 @@ villesSource.once('featuresloadend', function () {
   afterLoad()
   showRandomText()
 });
-
 }
-
-
 
 // Gestion de l'événement de survol
 const tooltip = document.getElementById('tooltipFalse');
@@ -458,7 +441,7 @@ map.on('click', function (e) {
         f.setStyle(correctStyle);
         listeVilles = listeVilles.filter(v => v !== nomVille);
         foundVilles.add(nomVille);
-        if (wrongClicksForCurrentTarget >= 1) {
+        if (wrongClicksForCurrentTarget >= 3) {
         document.getElementById('number').innerText = points;
           } else {
         points += 100
@@ -481,13 +464,13 @@ map.on('click', function (e) {
       }else{
         //soustraction d'un essai et de 50 points
         //essais = Math.max(0, essais - 1);
-        points = Math.max(0, points - 50);
         randomEncourage();    
         wrongClicksForCurrentTarget++;
-        if (wrongClicksForCurrentTarget >= 1 && !blinkInterval) {
+        if (wrongClicksForCurrentTarget >= 3 && !blinkInterval) {
             startBlinkingCurrentTarget();
             essais = Math.max(0, essais - 1);
-          } if (wrongClicksForCurrentTarget > 1 ) {
+            points = Math.max(0, points - 50);
+          } if (wrongClicksForCurrentTarget > 3 ) {
             isBlinking = true; 
           }
         if (!isBlinking) {

@@ -30,15 +30,17 @@ class Profile(models.Model):
 
 class GameResult(models.Model):
     GAME_CHOICES = [
-        ('villes', 'Jeu des villes'),
-        ('geophysique', 'Jeu géophysique'),
-        ('collectivites', 'Jeu des collectivités'),
+        ('villes', 'Villes / Städte'),
+        ('geophysique', 'Géophysique / Physische Geographie'),
+        ('collectivites', 'Collectivités / Gebietskörperschaften'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.CharField(max_length=20, choices=GAME_CHOICES)
     score = models.IntegerField()
+    tries = models.IntegerField()
     time_seconds = models.FloatField(help_text="Temps réalisé en secondes")
     date_played = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.game} - {self.score} pts en {self.time_seconds}s"
+

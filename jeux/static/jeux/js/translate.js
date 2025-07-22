@@ -1,14 +1,28 @@
-    let currentLang = 'FR'; // valeur par défaut
+    
+let currentLang = localStorage.getItem('lang') || 'FR'; // valeur par défaut
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang); // mémorise la langue
+  applyTranslations();
+}
+
 
     const translations = {
   FR: {
-    mainTitle: "Les jeux géographiques du Rhin Supérieur",
+    mainTitle: "Les jeux géo du Rhin Supérieur",
+    textBestScore: "Meilleur score et temps pour chaque jeu",
+    welcome: "Bienvenue",
+    logout: "Se déconnecter",
+    login: "Se connecter",
+    score: "Score",
+    time: "Temps",
     btnCities: "🗺️ Villes principales du Rhin Supérieur",
     btnPhysGeo: "🏞️ Géographie physique du Rhin Supérieur",
     btnRegions: "🏘️ Les collectivités du Rhin Supérieur",
     btnRhenaGuessr: "📍 RhenaGuessr",
-    btnInfo: "❓ Qu’est-ce que le Rhin Supérieur ?",
-    pres1 : "Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un jeu pour commencer à jouer.",
+    btnInfo: "Qu’est-ce que le Rhin Supérieur ?",
+    pres1 : "Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un des 3 jeux ci-dessous pour commencer à jouer :",
     pres2 : "Vous n'avez encore jamais entendu parler du Rhin Supérieur? Découvrez le territoire puis testez vos connaissances !",
     aproposRS : "À propos du Rhin Supérieur",
     apropostext : "Le Rhin Supérieur est une région transfrontalière située entre la France, l’Allemagne et la Suisse.",
@@ -31,7 +45,7 @@
     guessTextREG: (type, feat) => {
       if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
       if (type === "canton") return `Où se situe le canton de ${feat} ?`;
-      return `Où se situe ${feat} ?`;
+      return `Où se situe la ${feat} ?`;
     },
     winMessage: "🎉 Bravo ! Toutes les villes ont été trouvées !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
@@ -42,15 +56,23 @@
     finalTime: "Temps écoulé :",
     encouragements: ["Bien joué !", "Incroyable", "Bravo"],
     retryMessages: ["Essaie encore !", "Presque", "Pas loin !"],
+    footer: "© 2025 – Projet original développé par GeoRhena",
+    backToTop: "↑ Haut de page"
   },
   DE: {
-    mainTitle: "Die geographische Spiele des Oberrheins",
+    mainTitle: "Die Geospiele des Oberrheins",
+    textBestScore: "Beste Punktanzahl und Zeit für jedes Spiel",
+    welcome: "Willkommen",
+    logout: "Sich abmelden",
+    login: "Sich anmelden",
+    score: "Punktanzahl",
+    time: "Zeit",
     btnCities: "🗺️ Städte des Oberrheins",
     btnPhysGeo: "🏞️ Physische Geographie des Oberrheins",
-    btnRegions: "🏘️ Die Gebietskörperschaften des Oberrheins",
+    btnRegions: "🏘️ Gebietskörperschaften des Oberrheins",
     btnRhenaGuessr: "📍 RhenaGuessr",
-    btnInfo: "❓ Was ist denn der Oberrheingebiet ?",
-    pres1 : "Willkommen auf der Plattform für Geospiele am Oberrhein! Klicken Sie auf ein Spiel, um mit dem Spielen zu beginnen.",
+    btnInfo: "Was ist denn der Oberrheingebiet ?",
+    pres1 : "Willkommen auf der Plattform für Geospiele am Oberrhein! Klicken Sie auf einem der 3 Spiele hier unten, um mit dem Spielen zu beginnen:",
     pres2 : "Sie haben noch nie vom Oberrheingebiet gehört? Entdecken Sie das Gebiet und testen Sie dann Ihr Wissen!",
     aproposRS : "Zum Oberrheingebiet",
     apropostext : "Der Oberrhein ist eine grenzüberschreitende Region zwischen Frankreich, Deutschland und der Schweiz.",
@@ -84,52 +106,50 @@
     finalTime: "Vergangene Zeit :",
     encouragements: ["Gut gemacht!", "Unglaublich!", "Glückwunsch!"],
     retryMessages: ["Versuch es nochmal!", "Fast geschafft", "Knapp daneben!"],
+    footer: "© 2025 – Originales Projekt entwickelt von GeoRhena",
+    backToTop: "↑ Zurück nach oben"
   }
 };
-function setLanguage(lang) {
-  currentLang = lang;
-  console.log(lang)
-  $("#main-title").text(translations[lang].mainTitle);
 
-  $("#jeu-villes").text(translations[lang].btnCities);
-  $("#jeu-geophysique").text(translations[lang].btnPhysGeo);
-  $("#jeu-regions").text(translations[lang].btnRegions);
-  $("#jeu-RhenaGuessr").text(translations[lang].btnRhenaGuessr);
-  $("#btn-info").text(translations[lang].btnInfo);
+function applyTranslations() {
 
-  $("#pres-1").text(translations[lang].pres1);
-  $("#pres-2").text(translations[lang].pres2);
-  $("#a-propos-RS").text(translations[lang].aproposRS);
-  $("#a-propos-text").text(translations[lang].apropostext);
+  if (!translations[currentLang]) return;
+
+  $("#main-title").text(translations[currentLang].mainTitle);
+  $("#welcome").text(translations[currentLang].welcome);
+  $("#text-best-score").text(translations[currentLang].textBestScore);
+  $(".best-score").each(function () {
+    $(this).text(translations[currentLang].score + " :");
+  });
+  $(".best-time").each(function () {
+    $(this).text(translations[currentLang].time );
+  });
+  $(".logout-button").text(translations[currentLang].logout);
+  $(".login-link").text(translations[currentLang].login);
+
+
+  $("#jeu-villes").text(translations[currentLang].btnCities);
+  $("#jeu-geophysique").text(translations[currentLang].btnPhysGeo);
+  $("#jeu-regions").text(translations[currentLang].btnRegions);
+  $("#jeu-RhenaGuessr").text(translations[currentLang].btnRhenaGuessr);
+  $("#btn-info").text(translations[currentLang].btnInfo);
+
+  $("#pres-1").text(translations[currentLang].pres1);
+  $("#pres-2").text(translations[currentLang].pres2);
+  $("#a-propos-RS").text(translations[currentLang].aproposRS);
+  $("#a-propos-text").text(translations[currentLang].apropostext);
   
-  document.querySelector('#t-Villes').lastChild.textContent = translations[lang].toggleVilles;
-  document.querySelector('#t-GP').lastChild.textContent = translations[lang].toggleGP;
-  document.querySelector('#t-Regions').lastChild.textContent = translations[lang].toggleRegions;
+  document.querySelector('#t-Villes').lastChild.textContent = translations[currentLang].toggleVilles;
+  document.querySelector('#t-GP').lastChild.textContent = translations[currentLang].toggleGP;
+  document.querySelector('#t-Regions').lastChild.textContent = translations[currentLang].toggleRegions;
 
-  $("#villesInfo").text(translations[lang].villesInfo);
-  $("#geophysiqueInfo").text(translations[lang].GPInfo);
-  $("#regionsInfo").text(translations[lang].regionsInfo);
-
-  $("#page-title").text(translations[lang].title);
-  $("#page-title-GP").text(translations[lang].titleGP);
-  $("#page-title-reg").text(translations[lang].titleReg);
-  $("#restartBtn").text(translations[lang].restart);
-  $("#restartBtnREG").text(translations[lang].restart);
-  $("#restartBtnGP").text(translations[lang].restart);
-  $("#exploreBtn").text(translations[lang].explore);
-  $("#test h2").text(translations[lang].tries);
-  $("#points h2").text(translations[lang].points);
-  $("#chrono").parent().html(`${translations[lang].time} <span id='chrono'>00:00</span>`);
-  $("#randomText").text(translations[lang].guessText(currentTarget));
-  $("#randomTextREG").text(translations[lang].guessTextREG(currentType, currentTarget));
-  $("#encouragments").text(translations[lang].encouragements);
-
-  $("#finalScore").html(`${translations[currentLang].finalScore} ${points}`);
-  $("#finalTries").html(`${translations[currentLang].finalTries} ${5 - essais}`);
-  $("#finalTime").html(`${translations[currentLang].finalTime} ${formatTime(elapsedTime)}`);
-  if (essais === 0){
-      $("#finalMessage").html(translations[currentLang].looseMessage);
-  } else {
-    $("#finalMessage").html(translations[currentLang].winMessage);
-  }
+  $("#villesInfo").text(translations[currentLang].villesInfo);
+  $("#geophysiqueInfo").text(translations[currentLang].GPInfo);
+  $("#regionsInfo").text(translations[currentLang].regionsInfo);
+  $("#footer").text(translations[currentLang].footer)
+  $("#back-to-top").text(translations[currentLang].backToTop)
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  setLanguage(currentLang);
+});

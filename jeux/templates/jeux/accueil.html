@@ -7,30 +7,31 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-  <div id = "pres-1"> Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un jeu pour commencer à jouer. </div>
   <section class="home">
-    <div class="button-group">
-      <a href="{% url 'jeu_villes' %}" class="btn-villes" id="jeu-villes">🗺️ Villes principales du Rhin Supérieur</a>
-      <a href="{% url 'jeu_geophysique' %}" class="btn-GP" id="jeu-geophysique">🏞️ Géographie physique du Rhin Supérieur</a>
-      <a href="{% url 'jeu_regions' %}" class="btn-reg" id="jeu-regions">🏘️ Les collectivités du Rhin Supérieur</a>
-     <!--  <a href="#" class="btn" id="jeu-RhenaGuessr">📍 RhenaGuessr</a> -->
-    </div>
-        <div id="pres-2"> Vous n'avez encore jamais entendu parler du Rhin Supérieur? Découvrez le territoire puis testez vos connaissances ! </div>
+    <div id = "pres-1"> Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un jeu pour commencer à jouer. </div>
+<div class="button-group" id ="button-group-title">
+  <div class="button-group-title"  >JOUER</div>
+  <div class="button-row">
+    <a href="{% url 'jeu_regions' %}" class="btn-reg" id="jeu-regions">
+      <strong>Jeu</strong><br>🏘️ Les collectivités du Rhin Supérieur
+    </a>
+    <a href="{% url 'jeu_villes' %}" class="btn-villes" id="jeu-villes">
+      <strong>Jeu</strong><br>🗺️ Villes principales du Rhin Supérieur
+    </a>
+    <a href="{% url 'jeu_geophysique' %}" class="btn-GP" id="jeu-geophysique">
+      <strong>Jeu</strong><br>🏞️ Géographie physique du Rhin Supérieur
+    </a>
+  </div>
+</div>
+      <div id="pres-2"> Vous n'avez encore jamais entendu parler du Rhin Supérieur? Découvrez le territoire puis testez vos connaissances ! </div>
       <a href="#webmap" class="btn" id="btn-info">❓ Qu’est-ce que le Rhin Supérieur ?</a>
   </section>
-
   <div id="webmap" class="map"></div>
     <div id="side-bar">
       <h2 id = "a-propos-RS">À propos du Rhin Supérieur</h2>
       <p id = "a-propos-text">
         Le Rhin Supérieur est une région transfrontalière située entre la France, l’Allemagne et la Suisse.
       </p>
-      <!-- 
-      <div class="button-group">
-      <a class="btn" id="affichage-villes">Explorer les villes principales</a>
-      <a class="btn" id="affichage-geophysique">Afficher Géographie physique </a>
-      <a class="btn" id="affichage-regions">Afficher Collectivités</a>
-      -->
       <div class="toggleContainer">
   <div class="toggleHeader"  id = "villesHeader">
     <label id = "t-Villes">
@@ -69,6 +70,7 @@
     <p>Le Rhin Supérieur est composé de 2 départements français (qui forment la collectivité eauropéenne d'Alsace), 14 Landkreise allemands et 5 cantons suisses.</p>
   </div>
 </div>
+<button href="#button-group-title"  id="play-button">JOUER</button>
     </div>
 <div id="popup" class="ol-popup">
   <div id="popup-content"></div>
@@ -82,7 +84,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="{% static 'jeux/ol.js' %}"></script>
   <script>
-  const hydroUrl = "{% static 'jeux/data/hydro_rs_4258_km.geojson' %}";
+  const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
   const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_photos.geojson' %}";
   const regionsUrl = "{% static 'jeux/data/departements_landkreis_canton.geojson' %}";
   const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}"; 

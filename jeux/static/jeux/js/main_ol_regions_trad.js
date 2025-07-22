@@ -13,11 +13,6 @@ const crsSource = new ol.source.Vector({
     format: new ol.format.GeoJSON(),
   });
 
-const rhinSource = new ol.source.Vector({
-    url: 'https://geoportal.georhena.eu/geoserver/water/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=water%3Arhin&OUTPUTFORMAT=json',
-    format: new ol.format.GeoJSON(),
-  });
-
 
 // charger la couche de la limite du crs avec le style
 var crsLayer = new ol.layer.Vector({
@@ -29,28 +24,29 @@ var crsLayer = new ol.layer.Vector({
   }),
 });
 
-var rhinLayer = new ol.layer.Vector({
-  source: rhinSource,
+const paysSource = new ol.source.Vector({
+    url: paysUrl,
+    format: new ol.format.GeoJSON(),
+  });
+
+
+var paysLayer = new ol.layer.Vector({
+  source: paysSource,
   //background: 'black',
   style: new ol.style.Style({
-      fill: new ol.style.Fill({ color: 'rgb(26, 200, 206)' }),
-      stroke: new ol.style.Stroke({ color: 'rgb(26, 200, 206)', width: 2 }),
+      fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0)' }),
+      stroke: new ol.style.Stroke({ color: 'rgba(60, 51, 51, 0.47)', width: 2 }),
   }),
 });
 
-
-// Définir la zone autorisée en longitude/latitude
-const extentLatLon = [2, 42, 15, 55];
-
 const map = new ol.Map({
   target: 'webmap',
-  layers: [basemap, crsLayer, rhinLayer],
+  layers: [basemap, crsLayer, paysLayer],
   view: new ol.View({
     center: [7.772542083975405, 48.234177921525884],
     zoom: 8.3,
-    minZoom: 6,
+    minZoom: 7,
     maxZoom: 11,
-    extent: extentLatLon // <-- bloquer le panning à cette zone
   }),
 });
 
@@ -66,10 +62,13 @@ let elapsedTime = 0;
 let gameActive = false
 let selected = null;
 let essais = 5;
+let finalTries = 0;
 let points = 0;
 const mapRect = map.getTargetElement().getBoundingClientRect();
 const nomToNUTS = {};
-
+let blinkInterval = null;
+let isBlinking = false;
+let wrongClicksForCurrentTarget = 0;
 
 //styles couches 
 
@@ -126,16 +125,16 @@ function hoverByType(feature) {
 
   switch (type) {
     case "Landkreis":
-      fillColor = "rgba(113, 96, 42, 0.7)";
+      fillColor = "rgba(161, 143, 82, 0.7)";
       strokeColor = "rgba(228, 192, 82, 1)";
       break;
     case "canton":
-      fillColor = "rgba(123, 50, 119, 0.7)";
+      fillColor = "rgba(123, 50, 119, 0.67)";
       strokeColor = "rgba(220, 146, 215, 1)";
       break;
     case "collectivité":
     default:
-      fillColor = "rgba(43, 105, 66, 1)";
+      fillColor = "rgba(85, 196, 126, 0.68)";
       strokeColor = "rgba(137, 202, 161, 1)";
       break;
   }
@@ -186,7 +185,12 @@ function showRandomText() {
     currentTarget = listeRegions[randomIndex];
     const nuts3 = nomToNUTS[currentTarget]
     currentType = detectTypeFromNUTS(nuts3)
-    document.getElementById('randomTextREG').innerText = translations[currentLang].guessTextREG(currentType, currentTarget);
+    wrongClicksForCurrentTarget = 0;
+    if (blinkInterval) {
+      clearInterval(blinkInterval);
+      blinkInterval = null;
+    }
+    document.getElementById('randomTextREG').innerText = translate[currentLang].guessTextREG(currentType, currentTarget);
 };
 
 
@@ -203,15 +207,44 @@ function showEncouragementMessage(text) {
 
 function randomCongrats() {
   //const congrats = ["Bien joué !", "Incroyable", "Bravo"];
-  const randomId = Math.floor(Math.random() * translations[currentLang].encouragements.length);
-  showEncouragementMessage(translations[currentLang].encouragements[randomId]);
+  const randomId = Math.floor(Math.random() * translate[currentLang].encouragements.length);
+  showEncouragementMessage(translate[currentLang].encouragements[randomId]);
 }
 
 function randomEncourage() {
   //const messages = ["Essaie encore !", "Presque", "Pas loin !"];
-  const randomId = Math.floor(Math.random() * translations[currentLang].retryMessages.length);
-  showEncouragementMessage(translations[currentLang].retryMessages[randomId]);
+  const randomId = Math.floor(Math.random() * translate[currentLang].retryMessages.length);
+  showEncouragementMessage(translate[currentLang].retryMessages[randomId]);
 }
+
+
+function startBlinkingCurrentTarget() {
+  let targetLayer = listeRegions.includes(currentTarget) ? regionsLayer : regionsLayer;
+  let source = targetLayer.getSource();
+  let featureToBlink = source.getFeatures().find(f => f.get('nom') === currentTarget);
+  if (!featureToBlink) return;
+
+  let visible = true;
+
+  blinkInterval = setInterval(() => {
+    if (!foundRegions.has(featureToBlink)) {
+      if (visible) {
+        // style "flash"
+        featureToBlink.setStyle(new ol.style.Style({
+            fill: new ol.style.Fill({ color: 'yellow' }),
+            stroke: new ol.style.Stroke({ color: 'orange', width: 2 }),
+        }));
+      } else {
+        // remettre le style normal
+        if (listeRegions.includes(currentTarget)) {
+          featureToBlink.setStyle(styleByType);
+        }
+      }
+      visible = !visible;
+    }
+  }, 500);
+}
+
 
 function afterLoad() {
   //document.getElementById('error').innerText = essais;
@@ -254,8 +287,12 @@ function initGame() {
   foundRegions.clear();
   points = 0;
   essais = 5;
+  finalTries = 0;
   updateGauge()
   //gameEnded = false;
+  blinkInterval = null;
+  isBlinking = false
+  wrongClicksForCurrentTarget = 0;
 
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
@@ -306,17 +343,23 @@ regionsSource.once('featuresloadend', function () {
 
 
 function endGame(){
+  isBlinking = false
+  finalTries = 5 - essais
+  if (blinkInterval) {
+    clearInterval(blinkInterval);
+    blinkInterval = null;
+  }
   tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
   //tooltipFalse.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
 
   let message = listeRegions.length === 0
-    ? translations[currentLang].winMessageREG
-    : translations[currentLang].looseMessage;
+    ? translate[currentLang].winMessageREG
+    : translate[currentLang].looseMessage;
 
   document.getElementById('finalMessage').innerText = message;
-  document.getElementById('finalScore').innerText = `${translations[currentLang].finalScore} ${points}`;
-  document.getElementById('finalTries').innerText = `${translations[currentLang].finalTries} ${5 - essais}`;
-  document.getElementById('finalTime').innerText = `${translations[currentLang].finalTime} ${formatTime(elapsedTime)}`;
+  document.getElementById('finalScore').innerText = `${translate[currentLang].finalScore} ${points}`;
+  document.getElementById('finalTries').innerText = `${translate[currentLang].finalTries} ${5 - essais}`;
+  document.getElementById('finalTime').innerText = `${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`;
 
   // Montrer l'encart
   document.getElementById('endGameMessage').style.display = "block";
@@ -338,7 +381,10 @@ function endGame(){
       feature.setStyle(missedStyle);
     }
   });
-  fetch('/api/save_score/', {
+const baseUrl = window.location.origin; 
+console.log(baseUrl)
+
+  fetch(`${baseUrl}/api/save_score/`,  {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -347,6 +393,7 @@ function endGame(){
     body: JSON.stringify({
       game: 'collectivites',
       score: points,
+      tries: finalTries,
       time_seconds: elapsedTime
     })
   })
@@ -433,12 +480,22 @@ map.on('click', function (e) {
         return true;
       }
       if (nom === currentTarget){
+        isBlinking = false;
         f.setStyle(correctStyle);
         listeRegions = listeRegions.filter(v => v !== nom);
         foundRegions.add(nom); 
+      if (wrongClicksForCurrentTarget >= 3) {
+        document.getElementById('number').innerText = points;
+          } else {
         points += 100
         document.getElementById('number').innerText = points;
+          }
         showRandomText();
+        document.getElementById('guess').classList.add('flash-correctREG');
+        // La retire après 800ms
+        setTimeout(() => {
+          document.getElementById('guess').classList.remove('flash-correctREG');
+        }, 800);
         randomCongrats();
         const tooltip = $('#tooltipCorrect');
         tooltip.text(nom);
@@ -455,17 +512,25 @@ map.on('click', function (e) {
         return;
     }
       }else {
-        essais = Math.max(0, essais - 1);
-        points = Math.max(0, points - 50);
         randomEncourage();
-        const tooltip = $('#tooltipFalse');
-        tooltip.text(nom);
-        tooltip.css({
-          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
-          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
-          display: 'block'
+        wrongClicksForCurrentTarget++;
+        if (wrongClicksForCurrentTarget >= 3 && !blinkInterval) {
+            startBlinkingCurrentTarget();
+            essais = Math.max(0, essais - 1);
+            points = Math.max(0, points - 50);
+          } if (wrongClicksForCurrentTarget > 3 ) {
+            isBlinking = true; 
+          }
+        if (!isBlinking) {
+            const tooltip = $('#tooltipFalse');
+            tooltip.text(nom);
+            tooltip.css({
+              left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
+              top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+              display: 'block'
         });
         tooltip.stop(true, true).fadeIn(200).delay(500).fadeOut(300);
+      }
         //document.getElementById('error').innerText = essais;
         document.getElementById('number').innerText = points;
          updateGauge()

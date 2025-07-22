@@ -62,12 +62,14 @@ def save_game_result(request):
         data = json.loads(request.body)
         game = data.get('game')
         score = data.get('score')
+        tries = data.get('tries')
         time_seconds = data.get('time_seconds')
 
         GameResult.objects.create(
             user=request.user,
             game=game,
             score=score,
+            tries=tries,
             time_seconds=time_seconds,
         )
         return JsonResponse({'status': 'success'})

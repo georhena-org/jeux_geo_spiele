@@ -51,6 +51,10 @@
   <link rel="stylesheet" href="{% static 'jeux/styles/styles_villes.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="{% static 'jeux/ol.js' %}"></script>
-  <script> const regionsUrl = "{% static 'jeux/data/departements_landkreis_canton.geojson' %}"; </script>
+  <script> 
+    const regionsUrl = "{% static 'jeux/data/departements_landkreis_canton.geojson' %}"; 
+    const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}"; 
+  </script>
   <script src="{% static 'jeux/js/main_ol_regions_trad.js' %}"></script>
+  <script src="{% static 'jeux/js/translate_jeux.js' %}"></script>
 {% endblock %}

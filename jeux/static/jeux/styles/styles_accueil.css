@@ -1,12 +1,38 @@
-/* Boutons stylisés */
 .button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  margin-top: 1.5rem;
+  padding: 2rem;
+  border: 3px solid #161C94;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  margin: 2rem auto;
+  text-align: center;
 }
+
+.button-group-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #161C94;
+  margin-bottom: 1.5rem;
+}
+
+/* Boutons en ligne */
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: nowrap; /* pour forcer sur une seule ligne */
+}
+
+/* Assure un style homogène */
+.button-row a {
+  text-align: center;
+  width: 250px;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  padding: 1rem;
+}
+
 
 .btn {
   display: inline-block;
@@ -52,6 +78,38 @@
   transition: background-color 0.2s ease;
 }
 
+.btn-reg,
+.btn-villes,
+.btn-GP {
+  font-size: 1.3rem !important; /* augmente la taille globale */
+  line-height: 1.5;
+  text-align: center;
+}
+
+.btn-reg:hover,
+.btn-villes:hover,
+.btn-GP:hover {
+  transform: scale(1.1);
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centre horizontalement */
+  justify-content: center; /* centre verticalement si hauteur définie */
+  text-align: center;
+  padding: 2rem;
+}
+
+
+#pres-1,
+#pres-2,
+#btn-info {
+  margin: 1rem 0;
+  max-width: 600px;
+}
+
+
 #btn-info {
   display: inline-block;
   margin: 0 auto;
@@ -61,6 +119,21 @@
 .btn:hover {
   background-color: #005fa3;
 }
+
+
+#pres-1,
+#pres-2 {
+  font-size: 1.2rem;
+  font-weight: 1000;
+}
+
+.btn,
+.btn-reg,
+.btn-villes,
+.btn-GP {
+  font-size: 1.1rem;
+}
+
 
 .map {
   /*position: absolute;*/
@@ -76,7 +149,7 @@
 
 #side-bar {
   position: absolute;
-  top: 300px;
+  top: 700px;
   left: 50px;
   width: 300px;
   z-index: 10;
@@ -136,10 +209,28 @@
   max-width: 300px; /* Ajuste selon ton besoin */
 }
 
+#play-button {
+  left: 1rem;
+  background-color: #004466;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#play-button:hover {
+  background-color: #006699;
+}
 
 
 /* Adaptation mobile */
 @media (max-width: 768px) {
+    .button-row {
+    flex-wrap: wrap;
+  }
   #side-bar {
     position: static;
     width: 90%;

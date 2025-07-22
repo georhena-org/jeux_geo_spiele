@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Plateforme jeux géographiques{% endblock %}</title>
+    <title>{% block title %}Jeux geo Spiele{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'jeux/styles/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
@@ -18,13 +18,46 @@
             <img src ="{% static 'jeux/data/logo/home.svg' %}" alt="HOME" class="home-icon">
             </a>
         </div>
-        <div class="header-right">
-        <h1 id = "main-title">Les jeux géographiques du Rhin Supérieur</h1>
-        </div>
-        <div class="header-right">
-        <button onclick="setLanguage('FR')">FR</button>
-        <button onclick="setLanguage('DE')">DE</button>
+
+  <div class="header-center">
+    <h1 id="main-title">Les jeux géo du Rhin Supérieur</h1>
+    <div class="language-buttons">
+      <button onclick="setLanguage('FR')">FR</button>
+      <button onclick="setLanguage('DE')">DE</button>
     </div>
+  </div>
+
+        <div class="header-right">
+        {% if user.is_authenticated %}
+        <div class="user-profile-dropdown">
+          <button class="dropdown-toggle">Profil ▼</button>
+          <div class="dropdown-content">
+          <div class="welcome-row">
+            <p id = welcome>Bienvenue </p>
+            <p>{{ user.username }} !</p>
+          </div>
+            <p id = "text-best-score"> Meilleur score et temps pour chaque jeu </p>
+            <ul>
+              {% for game_code, result in user_profile.best_results.items %}
+                <li>                 
+                  <strong>{{ result.label }} :</strong>
+                  <div class="welcome-row">
+                  <p class = "best-score"></p> {{ result.best_score|default:"-" }} ,
+                  <p class = "best-time"></p> {% if result.best_time %}{{ result.best_time }} </div> {% else %}-{% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="logout-button">Se déconnecter</button>
+            </form>
+          </div>
+        </div>
+        {% else %}
+          <p><a href="{% url 'login' %}" class = "login-link">Se connecter</a></p>
+        {% endif %}
+     </div>
+
     </header>
     
     <main>
@@ -33,12 +66,44 @@
         {% endblock %}
     </main>
 
-    <footer>
-        <p>&copy; 2025 – Projet original développé par GeoRhena</p>
-    </footer>
+    <footer class="footer">
+    <button id="back-to-top">↑ Haut de page</button>
+    <div class="footer-text">
+        <p id="footer">&copy; 2025 – Projet original développé par GeoRhena</p>
+        <p>contact@georhena.eu</p>
+    </div>
+</footer>
+
 
     <script src="{% static 'jeux/scripts.js' %}"></script>
     <script src="{% static 'jeux/js/translate.js' %}"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.querySelector(".dropdown-toggle");
+    const content = document.querySelector(".dropdown-content");
+
+    if (toggle && content) {
+        toggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            content.classList.toggle("show");
+        });
+
+        // Fermer le menu si on clique ailleurs
+        document.addEventListener("click", function () {
+            content.classList.remove("show");
+        });
+    }
+});
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("back-to-top").addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  });
+</script>
+
     {% block extra_scripts %}{% endblock %}
     {% block extra_head %}{% endblock %}
 
