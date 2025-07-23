@@ -36,7 +36,13 @@ function setLanguage(lang) {
     guessTextREG: (type, feat) => {
       if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
       if (type === "canton") return `Où se situe le canton de ${feat} ?`;
+      if (type === "Stadt") return `Où se situe ${feat} Stadt?`;
       return `Où se situe la ${feat} ?`;
+    },
+    guessTextGP: (type, feat) => {
+      if (type === "sommet") return `⛰️ Où se situe le sommet ${feat} ?`;
+      if (type === "fleuve") return `💧 Où se situe le cours d'eau ${feat} ?`;
+      return `Où se situe ${feat} ?`;
     },
     winMessage: "🎉 Bravo ! Toutes les villes ont été trouvées !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
@@ -45,8 +51,8 @@ function setLanguage(lang) {
     finalScore: "Score final :",
     finalTries: "Nombre d'essais utilisés :",
     finalTime: "Temps écoulé :",
-    encouragements: ["Bien joué !", "Incroyable", "Bravo"],
-    retryMessages: ["Essaie encore !", "Presque", "Pas loin !"],
+    encouragements: ["Bien joué !", "Incroyable !", "Bravo !", "C’est tout à fait ça !", "Bonne réponse !", "Exactement !", "Impressionnant !", "Continue comme ça !"],
+    retryMessages: ["Essaie encore !", "Presque !", "Pas loin !", "Raté…", "Dommage…"],
   },
   DE: {
     mainTitle: "Die geographische Spiele des Oberrheins",
@@ -78,7 +84,13 @@ function setLanguage(lang) {
     guessTextREG:  (type, feat) => {
       if (type === "Landkreis") return `Wo liegt der Landkreis ${feat}?`;
       if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
-       return `Wo liegt die ${feat}?`;
+      if (type === "Stadt") return `Wo liegt ${feat} Stadt?`;
+       return `Wo liegt ${feat}?`;
+    },
+    guessTextGP:  (type, feat) => {
+      if (type === "sommet") return `⛰️ Wo liegt der Gipfel ${feat}?`;
+      if (type === "fleuve") return `💧 Wo liegt der Wasserlauf ${feat}?`;
+       return `Wo liegt ${feat}?`;
     },
     winMessage: "🎉 Glückwunsch! Alle Städte wurden gefunden!",
     looseMessage: "😔 Schade... Versuch es nochmal, du bist fast da!",
@@ -87,8 +99,8 @@ function setLanguage(lang) {
     finalScore: "Endpunktzahl :",
     finalTries: "Verwendete Versuche :",
     finalTime: "Vergangene Zeit :",
-    encouragements: ["Gut gemacht!", "Unglaublich!", "Glückwunsch!"],
-    retryMessages: ["Versuch es nochmal!", "Fast geschafft", "Knapp daneben!"],
+    encouragements: ["Gut gemacht!", "Genau richtig!", "Richtig geraten!", "Super!", "Klasse Leistung!", "Volltreffer!", "Stimmt genau!", "Spitze!", "Perfekt getroffen!", "Weiter so!"],
+    retryMessages: ["Versuch’s nochmal!", "Fast richtig!", "Leider falsch…", "Nicht ganz...", "Probier es weiter!", "Knapp daneben!", "Leider nein..."],
   }
 };
 
@@ -108,6 +120,7 @@ function applyTranslations() {
   $("#chrono").parent().html(`${translate[currentLang].time} <span id='chrono'>00:00</span>`);
   $("#randomText").text(translate[currentLang].guessText(currentTarget));
   $("#randomTextREG").text(translate[currentLang].guessTextREG(currentType, currentTarget));
+  $("#randomTextGP").text(translate[currentLang].guessTextGP(currentType, currentTarget));
   $("#encouragments").text(translate[currentLang].encouragements);
 
   $("#finalScore").html(`${translate[currentLang].finalScore} ${points}`);

@@ -17,7 +17,7 @@
           <button onclick= "window.open('https://geoportal.georhena.eu/datahub/dataset/5a380a89-cfd2-4e9e-8638-8020c03c9750','_blank')" id="exploreBtn">Explorer la donnée</button>          
         </div>
         <div id = "guess">
-          <div id = "randomText"></div>
+          <div id = "randomTextGP"></div>
         </div>
         <div id = "test">
           <h2>Essais restants </h2>
@@ -60,7 +60,7 @@
   <script src="{% static 'jeux/ol.js' %}"></script>
   <script>
   const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
-  const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258.geojson' %}";
+  const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_final.geojson' %}";
   </script>
   <script src="{% static 'jeux/js/geophysique_trad.js' %}"></script>
   <script src="{% static 'jeux/js/translate_jeux.js' %}"></script>

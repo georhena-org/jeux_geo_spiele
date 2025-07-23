@@ -12,6 +12,13 @@ from django.contrib.auth.decorators import login_required
 import json
 from .models import GameResult
 
+from django.contrib.auth.views import LoginView
+from .forms import CustomLoginForm
+
+class CustomLoginView(LoginView):
+    authentication_form = CustomLoginForm
+    template_name = 'registration/login.html'  # ou ton chemin actuel
+
 
 
 class SignUpView(generic.CreateView):
@@ -24,7 +31,7 @@ class SignUpView(generic.CreateView):
         # Créer le profil lié
         Profile.objects.create(
             user=self.object,
-            age=form.cleaned_data.get('age'),
+            age_range=form.cleaned_data.get('age_range'),
             gender=form.cleaned_data.get('gender'),
             country=form.cleaned_data.get('country'),
         )
@@ -32,13 +39,15 @@ class SignUpView(generic.CreateView):
 
 def accueil(request):
     return render(request, 'jeux/accueil.html')
-
+@login_required
 def jeu_villes(request):
     return render(request, 'jeux/jeu_villes.html')
 
+@login_required
 def jeu_geophysique(request):
     return render(request, 'jeux/jeu_geophysique.html')
 
+@login_required
 def jeu_regions(request):
     return render(request, 'jeux/jeu_regions.html')
 

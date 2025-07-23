@@ -17,9 +17,9 @@ function setLanguage(lang) {
     login: "Se connecter",
     score: "Score",
     time: "Temps",
-    btnCities: "🗺️ Villes principales du Rhin Supérieur",
-    btnPhysGeo: "🏞️ Géographie physique du Rhin Supérieur",
-    btnRegions: "🏘️ Les collectivités du Rhin Supérieur",
+    btnCities: "📍 <br>Villes principales du Rhin Supérieur",
+    btnPhysGeo: "🏞️ <br>Géographie physique du Rhin Supérieur",
+    btnRegions: "🏘️ <br>Les collectivités du Rhin Supérieur",
     btnRhenaGuessr: "📍 RhenaGuessr",
     btnInfo: "Qu’est-ce que le Rhin Supérieur ?",
     pres1 : "Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un des 3 jeux ci-dessous pour commencer à jouer :",
@@ -35,6 +35,7 @@ function setLanguage(lang) {
     villesInfo: "18 villes sont considérées comme prinicipales. Découvrez leur nom, le nombre d'habitants (2020) et la superficie de la commune à laquelle elles appartiennent.",
     GPInfo: "Ici s'affichent des sommets et points de vue emblématiques ainsi que les cours d'eau principaux du territoire.",
     regionsInfo: "Le Rhin Supérieur est composé de 2 départements français (qui forment la collectivité eauropéenne d'Alsace), 14 Landkreise allemands et 5 cantons suisses.",
+    play: "JOUER",
     restart: "Rejouer",
     explore: "Explorer la donnée",
     tries: "Essais restants:",
@@ -54,8 +55,6 @@ function setLanguage(lang) {
     finalScore: "Score final :",
     finalTries: "Nombre d'essais utilisés :",
     finalTime: "Temps écoulé :",
-    encouragements: ["Bien joué !", "Incroyable", "Bravo"],
-    retryMessages: ["Essaie encore !", "Presque", "Pas loin !"],
     footer: "© 2025 – Projet original développé par GeoRhena",
     backToTop: "↑ Haut de page"
   },
@@ -67,9 +66,9 @@ function setLanguage(lang) {
     login: "Sich anmelden",
     score: "Punktanzahl",
     time: "Zeit",
-    btnCities: "🗺️ Städte des Oberrheins",
-    btnPhysGeo: "🏞️ Physische Geographie des Oberrheins",
-    btnRegions: "🏘️ Gebietskörperschaften des Oberrheins",
+    btnCities: "📍 <br>Städte des Oberrheins",
+    btnPhysGeo: "🏞️ <br>Physische Geographie des Oberrheins",
+    btnRegions: "🏘️ <br>Gebietskörperschaften des Oberrheins",
     btnRhenaGuessr: "📍 RhenaGuessr",
     btnInfo: "Was ist denn der Oberrheingebiet ?",
     pres1 : "Willkommen auf der Plattform für Geospiele am Oberrhein! Klicken Sie auf einem der 3 Spiele hier unten, um mit dem Spielen zu beginnen:",
@@ -82,6 +81,7 @@ function setLanguage(lang) {
     villesInfo: "18 Städte werden als zentral angesehen. Hier finden Sie ihre Namen, die Einwohnerzahl (2020) und die Fläche der Gemeinde, zu der sie gehören.",
     GPInfo: "Hier werden markante Gipfel und Aussichtspunkte sowie die wichtigsten Wasserläufe des Gebiets angezeigt.",
     regionsInfo: "Der Oberrhein besteht aus 2 französischen Departements (die die collectivité européenne d'Alsace bilden), 14 deutschen Landkreisen und 5 Schweizer Kantonen.",
+    play: "SPIELEN",
     title: "Städte des Oberrheins",
     titleGP: "Physische Geographie des Oberrheins",
     titleReg: "Die Gebietskörperschaften des Oberrheins",
@@ -104,8 +104,6 @@ function setLanguage(lang) {
     finalScore: "Endpunktzahl :",
     finalTries: "Verwendete Versuche :",
     finalTime: "Vergangene Zeit :",
-    encouragements: ["Gut gemacht!", "Unglaublich!", "Glückwunsch!"],
-    retryMessages: ["Versuch es nochmal!", "Fast geschafft", "Knapp daneben!"],
     footer: "© 2025 – Originales Projekt entwickelt von GeoRhena",
     backToTop: "↑ Zurück nach oben"
   }
@@ -128,9 +126,9 @@ function applyTranslations() {
   $(".login-link").text(translations[currentLang].login);
 
 
-  $("#jeu-villes").text(translations[currentLang].btnCities);
-  $("#jeu-geophysique").text(translations[currentLang].btnPhysGeo);
-  $("#jeu-regions").text(translations[currentLang].btnRegions);
+  $("#jeu-villes").html(translations[currentLang].btnCities);
+  $("#jeu-geophysique").html(translations[currentLang].btnPhysGeo);
+  $("#jeu-regions").html(translations[currentLang].btnRegions);
   $("#jeu-RhenaGuessr").text(translations[currentLang].btnRhenaGuessr);
   $("#btn-info").text(translations[currentLang].btnInfo);
 
@@ -146,6 +144,12 @@ function applyTranslations() {
   $("#villesInfo").text(translations[currentLang].villesInfo);
   $("#geophysiqueInfo").text(translations[currentLang].GPInfo);
   $("#regionsInfo").text(translations[currentLang].regionsInfo);
+  $("#play-button").text(translations[currentLang].play);
+  $("#title-play-button").text(translations[currentLang].play);
+
+
+  
+
   $("#footer").text(translations[currentLang].footer)
   $("#back-to-top").text(translations[currentLang].backToTop)
 }

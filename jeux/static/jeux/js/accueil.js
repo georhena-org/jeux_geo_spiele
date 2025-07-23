@@ -136,6 +136,7 @@ function detectTypeFromNUTS(nuts3) {
   if (!nuts3) return null;
   if (nuts3.startsWith("CH")) return "Canton/Kanton";
   if (nuts3.startsWith("DE")) return "Landkreis";
+  if (nuts3.startsWith("ST")) return "Stadt";
   return null;
 }
 
@@ -348,7 +349,7 @@ map.on('pointermove', function(evt) {
       popupContent.innerHTML = `<b>${name}</b><br>Habitants/Einwohnerzahl: ${hab}<br>Superficie/Fläche: ${area} km²<br>
         ${photoUrl ? `<img src="${photoUrl}" alt="Photo de ${name}" style="max-width:220px; max-height:170px;">` : ''}`;
     } else if (layer === regionsLayer) {
-      const nuts3 = feature.get("nuts3");
+      const nuts3 = feature.get("type");
       const type = detectTypeFromNUTS(nuts3);
       popupContent.innerHTML = type ? `<b>${type}</b><br>${name}`: `${name}`;
     }

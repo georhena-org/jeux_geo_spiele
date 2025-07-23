@@ -10,23 +10,31 @@ class GameStat(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    age = models.IntegerField(null=True, blank=True)
+    AGE_RANGE_CHOICES = [
+        ('18-24', '18-24 ans / Jahre alt'),
+        ('25-34', '25-34 ans / Jahre alt'),
+        ('35-44', '35-44 ans / Jahre alt'),
+        ('45-54', '45-54 ans / Jahre alt'),
+        ('55-64', '55-64 ans / Jahre alt'),
+        ('64+', '64+ ans / Jahre alt'),
+    ]
+    age_range = models.CharField(max_length=10, choices=AGE_RANGE_CHOICES, null=True, blank=True)
     GENDER_CHOICES = [
         ('M', 'Homme / Mann'),
         ('F', 'Femme / Frau'),
-        ('O', 'Autre / Anderes'),
+        ('O', 'Autre / Divers'),
     ]
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     COUNTRY_CHOICES = [
         ('FR', 'France / Frankreich'),
         ('DE', 'Allemagne / Deutschland'),
         ('CH', 'Suisse/Schweiz'),
-        ('O', 'Autre / Anderes'),        
+        ('O', 'Autre / Anderes'),
     ]
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
-
     def __str__(self):
         return self.user.username
+
 
 class GameResult(models.Model):
     GAME_CHOICES = [
@@ -37,7 +45,7 @@ class GameResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.CharField(max_length=20, choices=GAME_CHOICES)
     score = models.IntegerField()
-    tries = models.IntegerField()
+    tries = models.IntegerField(default=0)
     time_seconds = models.FloatField(help_text="Temps réalisé en secondes")
     date_played = models.DateTimeField(auto_now_add=True)
 

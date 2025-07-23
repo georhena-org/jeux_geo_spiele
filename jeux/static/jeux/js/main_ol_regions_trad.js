@@ -176,6 +176,7 @@ function detectTypeFromNUTS(nuts3) {
   if (!nuts3) return null;
   if (nuts3.startsWith("CH")) return "canton";
   if (nuts3.startsWith("DE")) return "Landkreis";
+  if (nuts3.startsWith("ST")) return "Stadt"
   return "collectivité";
 }
 
@@ -331,7 +332,7 @@ regionsSource.once('featuresloadend', function () {
     f.setStyle(null);
     listeRegions.push(f.get('nom'))
     const nom = f.get('nom')
-    const nuts3 = f.get('nuts3')
+    const nuts3 = f.get('type')
     nomToNUTS[nom] = nuts3;
   });
   //initGame()

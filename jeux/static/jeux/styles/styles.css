@@ -24,6 +24,7 @@ header {
     display: flex;
     align-items: center;
     gap: 1rem;
+    width: 120px;
 }
 
 .header-center {
@@ -54,6 +55,8 @@ header {
     flex-direction: column;
     align-items: flex-end;
 }
+
+
 
 .language-buttons button {
   display: inline-block;
@@ -190,18 +193,34 @@ footer {
 #back-to-top {
   position: absolute;
   left: 1rem;
-  background-color: #004466;
-  color: white;
+  background-color: #ffffff;
+  color: #161C94;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   font-family: inherit;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+#footer-right {
+  position: absolute;
+  right: 1rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
 #back-to-top:hover {
-  background-color: #006699;
+  background-color: #8dd3f5;
 }
 
 @media screen and (max-width: 600px) {

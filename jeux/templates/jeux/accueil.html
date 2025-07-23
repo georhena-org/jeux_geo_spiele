@@ -10,7 +10,7 @@
   <section class="home">
     <div id = "pres-1"> Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un jeu pour commencer à jouer. </div>
 <div class="button-group" id ="button-group-title">
-  <div class="button-group-title"  >JOUER</div>
+  <div class="button-group-title" id = "title-play-button" >JOUER</div>
   <div class="button-row">
     <a href="{% url 'jeu_regions' %}" class="btn-reg" id="jeu-regions">
       <strong>Jeu</strong><br>🏘️ Les collectivités du Rhin Supérieur
@@ -70,6 +70,7 @@
     <p>Le Rhin Supérieur est composé de 2 départements français (qui forment la collectivité eauropéenne d'Alsace), 14 Landkreise allemands et 5 cantons suisses.</p>
   </div>
 </div>
+    <div style = "margin-top: auto;margin-bottom: 1rem;"></div>
 <button href="#button-group-title"  id="play-button">JOUER</button>
     </div>
 <div id="popup" class="ol-popup">
@@ -85,8 +86,8 @@
   <script src="{% static 'jeux/ol.js' %}"></script>
   <script>
   const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
-  const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_photos.geojson' %}";
-  const regionsUrl = "{% static 'jeux/data/departements_landkreis_canton.geojson' %}";
+  const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_final.geojson' %}";
+  const regionsUrl = "{% static 'jeux/data/dep_landkreis_canton_stadt.geojson' %}";
   const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}"; 
   const villesUrl = "{% static 'jeux/data/villes_principales_pop.geojson' %}";   
   </script>

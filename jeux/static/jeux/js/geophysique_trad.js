@@ -216,19 +216,26 @@ function randomEncourage() {
   showEncouragementMessage(translate[currentLang].retryMessages[randomId]);
 }
 
+function detectTypeFromNom(typeGP) {
+  if (!typeGP) return null;
+  if (typeGP.includes("peak")) return "sommet";
+  if (typeGP.startsWith("Rivière")) return "fleuve";
+  return null;
+}
 
 function showRandomText() {
   selected = null;  
   const randomIndex = Math.floor(Math.random() * listeGuess.length);
   currentTarget = listeGuess[randomIndex];
-
+  const typeGP = nomToType[currentTarget]
+  currentType = detectTypeFromNom(typeGP)
   wrongClicksForCurrentTarget = 0;
   if (blinkInterval) {
     clearInterval(blinkInterval);
     blinkInterval = null;
   }
 
-  document.getElementById('randomText').innerText = translate[currentLang].guessText(currentTarget);
+  document.getElementById('randomTextGP').innerText = translate[currentLang].guessTextGP(currentType, currentTarget);
 
   if (listeSommets.includes(currentTarget)){
   hydroLayer.setVisible(false);
@@ -352,7 +359,7 @@ function initGame(){
 
   //document.getElementById('error').innerText = essais;
   document.getElementById('number').innerText = points;
-  document.getElementById('randomText').innerText = "";
+  document.getElementById('randomTextGP').innerText = "";
   document.getElementById('restartBtnGP').style.display = "none";
   document.getElementById('encouragments').innerText = "";
 
