@@ -81,7 +81,7 @@ let selected = null;
 let points = 0;
 let essais = 5;
 let finalTries = 0;
-const mapRect = map.getTargetElement().getBoundingClientRect();
+let mapRect = map.getTargetElement().getBoundingClientRect();
 let wrongClicksForCurrentTarget = 0;
 let blinkInterval = null;
 let foundVilles = new Set();
@@ -150,7 +150,6 @@ function randomCongrats() {
 }
 
 function randomEncourage() {
-  //const messages = ["Essaie encore !", "Presque", "Pas loin !"];
   const randomId = Math.floor(Math.random() * translate[currentLang].retryMessages.length);
   showEncouragementMessage(translate[currentLang].retryMessages[randomId]);
 }
@@ -211,89 +210,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-
-
-function endGame(){
-  isBlinking = false
-  tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
-  if (blinkInterval) {
-    clearInterval(blinkInterval);
-    blinkInterval = null;
-  }
-  let message = listeVilles.length === 0
-    ? translate[currentLang].winMessage
-    : translate[currentLang].looseMessage;
-
-  document.getElementById('finalMessage').innerText = message;
-  document.getElementById('finalScore').innerText = `${translate[currentLang].finalScore} ${points}`;
-  document.getElementById('finalTries').innerText = `${translate[currentLang].finalTries} ${5 - essais}`;
-  document.getElementById('finalTime').innerText = `${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`;
-  
-  // Montrer l'encart
-  document.getElementById('endGameMessage').style.display = "block";
-  document.getElementById('restartBtn').style.display = "block";
-  document.getElementById('exploreBtn').style.display = "block";
-
-  // Réinitialiser l'interface utilisateur
-  document.getElementById('guess').style.display = "none";
-  document.getElementById('test').style.display = "none";
-  document.getElementById('points').style.display = "none";
-  document.getElementById('chrono').parentElement.style.display = "none";
-  document.getElementById('encouragments').style.display = "none";
-  document.getElementById('chrono').innerText = "";
-
-  // Style rouge pour les villes non trouvées
-  const missedStyle = function (nomVille) {
-    return new ol.style.Style({
-      text: new ol.style.Text({
-        font: '14px Arial, sans-serif',
-        text: nomVille,
-        fill: new ol.style.Fill({ color: 'red' }),
-        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
-        offsetY: -15,
-      }),
-      image: new ol.style.Circle({
-        radius: 5,
-        fill: new ol.style.Fill({ color: 'red' }),
-        stroke: new ol.style.Stroke({ color: 'red', width: 2 }),
-      }),
-    });
-  };
-
-  // Appliquer ce style aux villes restantes
-  villesLayer.getSource().getFeatures().forEach((feature) => {
-    const nom = feature.get('name');
-    if (listeVilles.includes(nom)) {
-      feature.setStyle(missedStyle(nom));
-    }
-  });
-const baseUrl = window.location.origin; 
-console.log(baseUrl)
-
-  fetch(`${baseUrl}/api/save_score/`,  {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken'), 
-    },
-    body: JSON.stringify({
-      game: 'villes',
-      score: points,
-      tries: finalTries,
-      time_seconds: elapsedTime
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if(data.status === 'success'){
-      console.log('Score enregistré avec succès');
-    } else {
-      console.error('Erreur lors de l\'enregistrement:', data.message);
-    }
-  })
-  .catch(error => console.error('Erreur réseau:', error));
-
-}
 
 
 function showRandomText() {
@@ -378,6 +294,89 @@ villesSource.once('featuresloadend', function () {
   afterLoad()
   showRandomText()
 });
+}
+
+
+function endGame(){
+  isBlinking = false
+  tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
+  if (blinkInterval) {
+    clearInterval(blinkInterval);
+    blinkInterval = null;
+  }
+  let message = listeVilles.length === 0
+    ? translate[currentLang].winMessage
+    : translate[currentLang].looseMessage;
+
+  document.getElementById('finalMessage').innerText = message;
+  document.getElementById('finalScore').innerText = `${translate[currentLang].finalScore} ${points}`;
+  document.getElementById('finalTries').innerText = `${translate[currentLang].finalTries} ${5 - essais}`;
+  document.getElementById('finalTime').innerText = `${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`;
+  
+  // Montrer l'encart
+  document.getElementById('endGameMessage').style.display = "block";
+  document.getElementById('restartBtn').style.display = "block";
+  document.getElementById('exploreBtn').style.display = "block";
+
+  // Réinitialiser l'interface utilisateur
+  document.getElementById('guess').style.display = "none";
+  document.getElementById('test').style.display = "none";
+  document.getElementById('points').style.display = "none";
+  document.getElementById('chrono').parentElement.style.display = "none";
+  document.getElementById('encouragments').style.display = "none";
+  document.getElementById('chrono').innerText = "";
+
+  // Style rouge pour les villes non trouvées
+  const missedStyle = function (nomVille) {
+    return new ol.style.Style({
+      text: new ol.style.Text({
+        font: '14px Arial, sans-serif',
+        text: nomVille,
+        fill: new ol.style.Fill({ color: 'red' }),
+        stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+        offsetY: -15,
+      }),
+      image: new ol.style.Circle({
+        radius: 5,
+        fill: new ol.style.Fill({ color: 'red' }),
+        stroke: new ol.style.Stroke({ color: 'red', width: 2 }),
+      }),
+    });
+  };
+
+  // Appliquer ce style aux villes restantes
+  villesLayer.getSource().getFeatures().forEach((feature) => {
+    const nom = feature.get('name');
+    if (listeVilles.includes(nom)) {
+      feature.setStyle(missedStyle(nom));
+    }
+  });
+const baseUrl = window.location.origin; 
+console.log(baseUrl)
+
+  fetch(`${baseUrl}/api/save_score/`,  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken'), 
+    },
+    body: JSON.stringify({
+      game: 'villes',
+      score: points,
+      tries: finalTries,
+      time_seconds: elapsedTime
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status === 'success'){
+      console.log('Score enregistré avec succès');
+    } else {
+      console.error('Erreur lors de l\'enregistrement:', data.message);
+    }
+  })
+  .catch(error => console.error('Erreur réseau:', error));
+
 }
 
 // Gestion de l'événement de survol

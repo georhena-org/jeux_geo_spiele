@@ -11,6 +11,7 @@ function setLanguage(lang) {
     const translations = {
   FR: {
     mainTitle: "Les jeux géo du Rhin Supérieur",
+    testVersion : "Version test",
     textBestScore: "Meilleur score et temps pour chaque jeu",
     welcome: "Bienvenue",
     logout: "Se déconnecter",
@@ -25,16 +26,16 @@ function setLanguage(lang) {
     pres1 : "Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un des 3 jeux ci-dessous pour commencer à jouer :",
     pres2 : "Vous n'avez encore jamais entendu parler du Rhin Supérieur? Découvrez le territoire puis testez vos connaissances !",
     aproposRS : "À propos du Rhin Supérieur",
-    apropostext : "Le Rhin Supérieur est une région transfrontalière située entre la France, l’Allemagne et la Suisse.",
+    apropostext : "Le Rhin Supérieur est une région transfrontalière située entre la France, l’Allemagne et la Suisse. Cochez/décochez les cases et cliquez sur les flèches pour en apprendre plus.",
     toggleVilles : "Explorer les villes principales",
     toggleGP : "Explorer les sommets et les cours d'eau",
     toggleRegions : "Explorer les collectivités",
     title: "Les villes principales du Rhin Supérieur",
     titleGP: "Géographie physique du Rhin Supérieur",
     titleReg: "Les collectivités du Rhin Supérieur",
-    villesInfo: "18 villes sont considérées comme prinicipales. Découvrez leur nom, le nombre d'habitants (2020) et la superficie de la commune à laquelle elles appartiennent.",
-    GPInfo: "Ici s'affichent des sommets et points de vue emblématiques ainsi que les cours d'eau principaux du territoire.",
-    regionsInfo: "Le Rhin Supérieur est composé de 2 départements français (qui forment la collectivité eauropéenne d'Alsace), 14 Landkreise allemands et 5 cantons suisses.",
+    villesInfo: "GeoRhena vous propose de découvrir 18 villes du Rhin Supérieur, leur nom, le nombre d'habitants (2020) et leur superficie.",
+    GPInfo: "Ici s'affichent des sommets emblématiques ainsi que les cours d'eau principaux du territoire.",
+    regionsInfo: "Le Rhin Supérieur est composé de 2 départements français (qui forment la collectivité européenne d'Alsace), 14 Land- et Stadtkreise allemands et 5 cantons suisses.",
     play: "JOUER",
     restart: "Rejouer",
     explore: "Explorer la donnée",
@@ -60,6 +61,7 @@ function setLanguage(lang) {
   },
   DE: {
     mainTitle: "Die Geospiele des Oberrheins",
+    testVersion : "Test Version",
     textBestScore: "Beste Punktanzahl und Zeit für jedes Spiel",
     welcome: "Willkommen",
     logout: "Sich abmelden",
@@ -114,6 +116,8 @@ function applyTranslations() {
   if (!translations[currentLang]) return;
 
   $("#main-title").text(translations[currentLang].mainTitle);
+  $("#test-version").text(translations[currentLang].testVersion);
+
   $("#welcome").text(translations[currentLang].welcome);
   $("#text-best-score").text(translations[currentLang].textBestScore);
   $(".best-score").each(function () {

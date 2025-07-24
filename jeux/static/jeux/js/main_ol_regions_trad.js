@@ -44,7 +44,7 @@ const map = new ol.Map({
   layers: [basemap, crsLayer, paysLayer],
   view: new ol.View({
     center: [7.772542083975405, 48.234177921525884],
-    zoom: 8.3,
+    zoom: 8,
     minZoom: 7,
     maxZoom: 11,
   }),
@@ -64,7 +64,7 @@ let selected = null;
 let essais = 5;
 let finalTries = 0;
 let points = 0;
-const mapRect = map.getTargetElement().getBoundingClientRect();
+let mapRect = map.getTargetElement().getBoundingClientRect();
 const nomToNUTS = {};
 let blinkInterval = null;
 let isBlinking = false;
@@ -207,13 +207,11 @@ function showEncouragementMessage(text) {
 }
 
 function randomCongrats() {
-  //const congrats = ["Bien joué !", "Incroyable", "Bravo"];
   const randomId = Math.floor(Math.random() * translate[currentLang].encouragements.length);
   showEncouragementMessage(translate[currentLang].encouragements[randomId]);
 }
 
 function randomEncourage() {
-  //const messages = ["Essaie encore !", "Presque", "Pas loin !"];
   const randomId = Math.floor(Math.random() * translate[currentLang].retryMessages.length);
   showEncouragementMessage(translate[currentLang].retryMessages[randomId]);
 }

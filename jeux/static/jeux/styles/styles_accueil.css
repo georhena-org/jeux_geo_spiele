@@ -2,7 +2,7 @@
   padding: 2rem;
   border: 3px solid #161C94;
   border-radius: 12px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f97a;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 1000px;
   text-align: center;
@@ -98,6 +98,10 @@
   justify-content: center; /* centre verticalement si hauteur définie */
   text-align: center;
   padding: 2rem;
+  background-image: url("/static/jeux/data/logo/contour_rs.svg");
+  background-size: 26%;
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 
@@ -141,16 +145,16 @@
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 800px;/*calc(100% - 100px);*/
+  height: 650px;/*calc(100% - 100px);*/
   z-index: 1;
 }
 
 
 #side-bar {
   position: absolute;
-  top: 700px;
+  top: 620px;
   left: 50px;
-  width: 300px;
+  width: 350px;
   z-index: 10;
   background: rgba(255,255,255,0.95);
   padding: 1em;
@@ -234,6 +238,9 @@
 @media (max-width: 768px) {
   .button-row {
     flex-wrap: wrap;
+  }
+    .home {
+    background-image: none;
   }
   #side-bar {
     position: static;

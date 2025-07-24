@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnInfo = document.getElementById('btn-info');
   btnInfo.addEventListener('click', (e) => {
     e.preventDefault();
-    document.getElementById('webmap').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('btn-info').scrollIntoView({ behavior: 'smooth' });
   });
 
   const btnPlay = document.getElementById('play-button');

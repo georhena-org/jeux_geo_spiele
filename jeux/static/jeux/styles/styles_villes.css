@@ -27,7 +27,7 @@ body, html {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 800px;/*calc(100% - 100px);*/
+  height: 700px;/*calc(100% - 100px);*/
   z-index: 1;
 }
 

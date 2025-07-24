@@ -184,6 +184,7 @@ footer {
   gap: 2rem;
   padding: 1rem;
   position: relative;
+  height: 80px;
 }
 
 .footer-text {
@@ -223,12 +224,34 @@ footer {
   background-color: #8dd3f5;
 }
 
-@media screen and (max-width: 600px) {
-    main {
-        padding: 1rem;
-    }
+@media screen and (max-width: 850px) {
+  footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
 
-    .game-list a {
-        font-size: 1.2rem;
-    }
+  #footer-right,
+  #back-to-top {
+    position: static;
+    margin: 0 auto;
+  }
+
+  #footer-right img {
+    max-width: 150px;
+    height: auto;
+  }
+
+  #back-to-top {
+    order: 3;
+  }
+
+  .footer-text {
+    order: 1;
+  }
+
+  #footer-right {
+    order: 2;
+  }
 }

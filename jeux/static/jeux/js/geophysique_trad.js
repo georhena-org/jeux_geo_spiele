@@ -5,11 +5,6 @@ const basemap = new ol.layer.Tile({
   source: new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
     attributions: 'Tiles © Esri'
-    //url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager_no_labels_no_buildings/{z}/{x}/{y}{r}.png',
-    //attributions: '© OpenStreetMap contributors © CARTO'
-    //url: 'https://api.mapbox.com/styles/v1/chloecea/cmcam4vse006201s3dwo73na2/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2hsb2VjZWEiLCJhIjoiY204NXhxYmluMmg1aTJqczZra3pvMHl4bCJ9.tseVk6aD8VN2WpKxga35ww',
-    //tileSize: 512,  // pour les tuiles @2x (retina)
-    //attributions: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a>',
   })
 });
 
@@ -46,7 +41,7 @@ villesLayer = new ol.layer.Vector({
 const originalPointStyle = new ol.style.Style({
   image: new ol.style.Circle({
       radius: 5,
-      fill: new ol.style.Fill({ color: 'rgba(42, 136, 13, 0.55)'}),
+      fill: new ol.style.Fill({ color: 'rgba(42, 136, 13, 0.78)'}),
       //stroke: new ol.style.Stroke({ color: 'rgba(42, 136, 13, 0.58)', width: 2 }),
 }),
 });
@@ -124,7 +119,7 @@ const map = new ol.Map({
     7.772542083975405,
     48.234177921525884
     ],
-    zoom: 8.3,
+    zoom: 8,
     minZoom: 7,
     maxZoom: 11,
   }),
@@ -155,7 +150,7 @@ let gameActive = false
 let points = 0;
 let essais = 5;
 let finalTries = 0;
-const mapRect = map.getTargetElement().getBoundingClientRect();
+let mapRect = map.getTargetElement().getBoundingClientRect();
 let isBlinking = false;
 const nomToType = {};
 
@@ -539,8 +534,8 @@ map.on('pointermove', function (e) {
         const tooltip = $('#tooltip');
         tooltip.text(nomFeat);
         tooltip.css({
-          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
-          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+          left: e.originalEvent.clientX - mapRect.left + 5 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 5 + 'px',
           display: 'block'
         });
       }
@@ -554,8 +549,8 @@ map.on('pointermove', function (e) {
         const tooltip = $('#tooltip');
         tooltip.text(nomFeat);
         tooltip.css({
-          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
-          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+          left: e.originalEvent.clientX - mapRect.left + 5 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 5 + 'px',
           display: 'block'
         });
       }
@@ -564,8 +559,8 @@ map.on('pointermove', function (e) {
         const tooltip = $('#tooltip');
         tooltip.text(nomFeat);
         tooltip.css({
-          left: e.originalEvent.clientX - mapRect.left + 10 + 'px',
-          top: e.originalEvent.clientY - mapRect.top + 10 + 'px',
+          left: e.originalEvent.clientX - mapRect.left + 5 + 'px',
+          top: e.originalEvent.clientY - mapRect.top + 5 + 'px',
           display: 'block'
         });
       }
