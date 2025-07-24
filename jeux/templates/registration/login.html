@@ -1,11 +1,15 @@
 {% extends "base.html" %}
+{% block title%} Connexion / Anmeldung{% endblock%}
+
 {% block content %}
 <h2>Connexion / Anmeldung</h2>
 <p>Vous devez être conncecté pour jouer / Sich müssen angemeldet sein, um zu spielen</p>
+<p>Pas encore de compte? Noch kein Konto? <a href="{% url 'signup' %}" style="display:inline-block; padding:0.4rem 1rem; background-color:#161C94; color:#fff; text-decoration:none; border-radius:4px; font-weight:500; transition:background-color 0.2s ease;"
+> S'inscrire / Sich registrieren</a></p>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Se connecter / sich anmelden</button>
+    <button type="submit" style ="margin-top: 10px; font-size: 16px; margin-bottom: 10px; background-color: #4CAF50; color: white;  border: none; font-family: 'Quicksand', sans-serif; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Se connecter / sich anmelden</button>
 </form>
-<p>Pas encore de compte? Noch kein Konto? <a href="{% url 'signup' %}"> S'inscrire / Sich registrieren</a></p>
 {% endblock %}
+

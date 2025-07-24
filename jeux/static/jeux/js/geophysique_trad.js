@@ -29,12 +29,23 @@ const villesSource = new ol.source.Vector({
     format: new ol.format.GeoJSON(),
   });
 
+const paysSource = new ol.source.Vector({
+    url: paysUrl,
+    format: new ol.format.GeoJSON(),
+  });
 
 // charger la couche de points des villes avec le style
 villesLayer = new ol.layer.Vector({
   source: villesSource,
 });
 
+paysLayer = new ol.layer.Vector({
+  source: paysSource,
+  style: new ol.style.Style({
+      fill: new ol.style.Fill({ color: 'rgba(79, 40, 40, 0)' }),
+      stroke: new ol.style.Stroke({ color: 'rgba(206, 65, 34, 0.84)', width: 2 }),
+      }),
+});
 
 
 //Les styles des couches
@@ -113,7 +124,7 @@ function correctStyleSommet(nomEntite) {
 // Ajouter la carte
 const map = new ol.Map({
   target: 'webmap',
-  layers: [basemap, crsLayer, villesLayer], //ombrageLayer
+  layers: [basemap, crsLayer, paysLayer, villesLayer], //ombrageLayer
   view: new ol.View({
     center: [
     7.772542083975405,
@@ -133,6 +144,7 @@ villesLayer.getSource().getFeatures().forEach((feature) => {
 });
 
 villesLayer.setVisible(false)
+paysLayer.setVisible(false)
 
 let sommetsLayer = null;
 let hydroLayer = null;
@@ -495,7 +507,7 @@ function endGame(){
     });
   }
 
-  toggleLayer('toggleLayer', villesLayer);
+  toggleLayer('toggleLayer', [villesLayer, paysLayer]);
 
 
 // Gestion de l'événement de survol
@@ -520,7 +532,7 @@ map.on('pointermove', function (e) {
   map.forEachFeatureAtPixel(e.pixel, function (f, layer) {
 
     if (layer === villesLayer) return;
-
+    if (layer === paysLayer) return;
     const nomFeat = f.get('name');
     if (!nomFeat) return true;
 

@@ -4,7 +4,7 @@
 
 {% load static %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Jeux géo / Geo-Spiele{% endblock %}
 
 {% block content %}
   <section class="home">
@@ -13,11 +13,11 @@
     <div class="button-group" id ="button-group-title">
   <div class="button-group-title" id = "title-play-button" >JOUER</div>
   <div class="button-row">
-    <a href="{% url 'jeu_regions' %}" class="btn-reg" id="jeu-regions">
-      <strong>Jeu</strong><br>🏘️ Les collectivités du Rhin Supérieur
-    </a>
     <a href="{% url 'jeu_villes' %}" class="btn-villes" id="jeu-villes">
       <strong>Jeu</strong><br>🗺️ Villes principales du Rhin Supérieur
+    </a>
+    <a href="{% url 'jeu_regions' %}" class="btn-reg" id="jeu-regions">
+      <strong>Jeu</strong><br>🏘️ Les collectivités du Rhin Supérieur
     </a>
     <a href="{% url 'jeu_geophysique' %}" class="btn-GP" id="jeu-geophysique">
       <strong>Jeu</strong><br>🏞️ Géographie physique du Rhin Supérieur
@@ -88,7 +88,7 @@
   <script>
   const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
   const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_final.geojson' %}";
-  const regionsUrl = "{% static 'jeux/data/dep_landkreis_canton_stadt.geojson' %}";
+  const regionsUrl = "{% static 'jeux/data/dep_landkreis_canton.geojson' %}";
   const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}"; 
   const villesUrl = "{% static 'jeux/data/villes_principales_pop.geojson' %}";   
   </script>

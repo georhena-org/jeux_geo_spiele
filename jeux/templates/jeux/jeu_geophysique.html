@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title%} Géophysique du Rhin Supérieur{% endblock%}
+{% block title%} Géophysique / Physische Geographie{% endblock%}
 
 {% block content %}
   <h1 id = "page-title-GP">Géographie physique du Rhin Supérieur</h1>
@@ -61,6 +61,7 @@
   <script>
   const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
   const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_final.geojson' %}";
+  const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}"; 
   </script>
   <script src="{% static 'jeux/js/geophysique_trad.js' %}"></script>
   <script src="{% static 'jeux/js/translate_jeux.js' %}"></script>
