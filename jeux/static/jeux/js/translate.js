@@ -18,6 +18,7 @@ function setLanguage(lang) {
     login: "Se connecter",
     score: "Score",
     time: "Temps",
+    leaderboard: "Classement",
     btnCities: "📍 <br>Villes principales du Rhin Supérieur",
     btnPhysGeo: "🏞️ <br>Géographie physique du Rhin Supérieur",
     btnRegions: "🏘️ <br>Les collectivités du Rhin Supérieur",
@@ -68,6 +69,7 @@ function setLanguage(lang) {
     login: "Sich anmelden",
     score: "Punktanzahl",
     time: "Zeit",
+    leaderboard: "Ranking",
     btnCities: "📍 <br>Städte des Oberrheins",
     btnPhysGeo: "🏞️ <br>Physische Geographie des Oberrheins",
     btnRegions: "🏘️ <br>Gebietskörperschaften des Oberrheins",
@@ -128,6 +130,7 @@ function applyTranslations() {
   });
   $(".logout-button").text(translations[currentLang].logout);
   $(".login-link").text(translations[currentLang].login);
+  $("#leaderboard").text(translations[currentLang].leaderboard);
 
 
   $("#jeu-villes").html(translations[currentLang].btnCities);

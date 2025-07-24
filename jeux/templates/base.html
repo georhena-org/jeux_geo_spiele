@@ -47,6 +47,7 @@
                 </li>
               {% endfor %}
             </ul>
+            <a href="{% url 'leaderboard' %}" class="leaderboard" id = "leaderboard">Classement</a>
             <form method="post" action="{% url 'logout' %}">
               {% csrf_token %}
               <button type="submit" class="logout-button">Se déconnecter</button>

@@ -14,7 +14,7 @@ from .models import GameResult
 
 from django.contrib.auth.views import LoginView
 from .forms import CustomLoginForm
-
+from jeux.context_processors import get_leaderboard
 class CustomLoginView(LoginView):
     authentication_form = CustomLoginForm
     template_name = 'registration/login.html'  # ou ton chemin actuel
@@ -39,6 +39,12 @@ class SignUpView(generic.CreateView):
 
 def accueil(request):
     return render(request, 'jeux/accueil.html')
+
+@login_required
+def leaderboard(request):
+    leaderboard = get_leaderboard()
+    return render(request, 'jeux/leaderboard.html')
+
 @login_required
 def jeu_villes(request):
     return render(request, 'jeux/jeu_villes.html')

@@ -17,4 +17,5 @@ urlpatterns = [
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('api/save_score/', views.save_game_result, name='save_game_result'),
     path('logout/', LogoutView.as_view(next_page='accueil'), name='logout'),
+    path('leaderboard/', views.leaderboard, name='leaderboard'),
 ]

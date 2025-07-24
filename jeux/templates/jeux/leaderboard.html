@@ -1,0 +1,28 @@
+{% extends "base.html"%}
+
+{% load static %}
+
+{% block title%} Leaderboard{% endblock%}
+
+{% block content %}
+<div class="leaderboard-container">
+{% if leaderboard %}
+  <h2>Classement/Ranking</h2>
+  {% for game_code, game_data in leaderboard.items %}
+    <h3>{{ game_data.label }}</h3>
+    <ol>
+      {% for entry in game_data.ranking %}
+        <li>{{ entry.username }} — Score/Punkte: {{ entry.score }}, Temps/Zeit: {{ entry.time_seconds }}</li>
+      {% endfor %}
+    </ol>
+  {% endfor %}
+{% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <link rel="stylesheet" href="{% static 'jeux/ol.css' %}">
+  <link rel="stylesheet" href="{% static 'jeux/styles/styles_accueil.css' %}">
+  <script src="{% static 'jeux/ol.js' %}"></script>
+  <script src="{% static 'jeux/js/main_ol.js' %}"></script>
+{% endblock %}
