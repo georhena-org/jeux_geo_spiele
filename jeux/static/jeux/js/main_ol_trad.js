@@ -300,12 +300,13 @@ villesSource.once('featuresloadend', function () {
 function endGame(){
   isBlinking = false
   tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
+  finalTries = 5 - essais
   if (blinkInterval) {
     clearInterval(blinkInterval);
     blinkInterval = null;
   }
   let message = listeVilles.length === 0
-    ? translate[currentLang].winMessage
+    ? translate[currentLang].winMessageVilles
     : translate[currentLang].looseMessage;
 
   document.getElementById('finalMessage').innerText = message;
@@ -330,7 +331,7 @@ function endGame(){
   const missedStyle = function (nomVille) {
     return new ol.style.Style({
       text: new ol.style.Text({
-        font: '14px Arial, sans-serif',
+        font: '14px Quicksand, sans-serif',
         text: nomVille,
         fill: new ol.style.Fill({ color: 'red' }),
         stroke: new ol.style.Stroke({ color: 'white', width: 2 }),

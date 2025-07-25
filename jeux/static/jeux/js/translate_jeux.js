@@ -8,6 +8,7 @@ function setLanguage(lang) {
     const translate = {
   FR: {
     mainTitle: "Les jeux géographiques du Rhin Supérieur",
+    testVersion : "Version test",
     btnCities: "🗺️ Villes principales du Rhin Supérieur",
     btnPhysGeo: "🏞️ Géographie physique du Rhin Supérieur",
     btnRegions: "🏘️ Les collectivités du Rhin Supérieur",
@@ -44,8 +45,9 @@ function setLanguage(lang) {
       if (type === "fleuve") return `💧 Où se situe le cours d'eau ${feat} ?`;
       return `Où se situe ${feat} ?`;
     },
-    winMessage: "🎉 Bravo ! Toutes les villes ont été trouvées !",
+    winMessage: "🎉 Bravo ! Tu as tout trouvé !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
+    winMessageVilles: "🎉 Bravo ! Toutes les villes ont été trouvées !",
     winMessageGP: "🎉 Bravo ! Tu as su identifier 20 cours d'eau et sommets !",
     winMessageREG: "🎉 Bravo ! Tu as trouvé toutes les collectivités membres du Rhin Supérieur !",
     finalScore: "Score final :",
@@ -53,6 +55,8 @@ function setLanguage(lang) {
     finalTime: "Temps écoulé :",
     encouragements: ["Bien joué !", "Incroyable !", "Bravo !", "C’est tout à fait ça !", "Bonne réponse !", "Exactement !", "Impressionnant !", "Continue comme ça !"],
     retryMessages: ["Essaie encore !", "Presque !", "Pas loin !", "Raté…", "Dommage…"],
+        footer: "© 2025 – Projet original développé par GeoRhena",
+    backToTop: "↑ Haut de page"
   },
   DE: {
     mainTitle: "Geographie-Spiele des Oberrheins",
@@ -92,21 +96,38 @@ function setLanguage(lang) {
       if (type === "fleuve") return `💧 Wo liegt der Wasserlauf ${feat}?`;
        return `Wo liegt ${feat}?`;
     },
-    winMessage: "🎉 Glückwunsch! Alle Städte wurden gefunden!",
+    winMessage: "🎉 Glückwunsch! Du hast alles richtig erraten!",
     looseMessage: "😔 Schade... Versuch es nochmal, du hast es fast geschafft!",
-    winMessageGP: "🎉 Glückwunsch! Du hast die 20 Wasserläufe und Berge gefunden !",
-    winMessageREG: "🎉 Glückwunsch! Alle  Gebietskörperschaften wurden gefunden! !",
+    winMessageVilles: "🎉 Glückwunsch! Alle Städte wurden gefunden!",
+    winMessageGP: "🎉 Glückwunsch! Du hast die 20 Wasserläufe und Berge gefunden!",
+    winMessageREG: "🎉 Glückwunsch! Alle  Gebietskörperschaften wurden gefunden!",
     finalScore: "Endpunktzahl:",
     finalTries: "Verwendete Versuche:",
     finalTime: "Vergangene Zeit:",
     encouragements: ["Gut gemacht!", "Genau richtig!", "Richtig geraten!", "Super!", "Klasse Leistung!", "Volltreffer!", "Stimmt genau!", "Spitze!", "Perfekt getroffen!", "Weiter so!"],
     retryMessages: ["Versuch’s nochmal!", "Fast richtig!", "Leider falsch…", "Nicht ganz...", "Probier es weiter!", "Knapp daneben!", "Leider nein..."],
+    footer: "© 2025 – Originales Projekt entwickelt von GeoRhena",
+    backToTop: "↑ Zurück nach oben",
+    testVersion : "Testversion",
   }
 };
 
 function applyTranslations() {
 
   $("#main-title").text(translate[currentLang].mainTitle);
+  $("#test-version").text(translations[currentLang].testVersion);
+
+    $("#welcome").text(translations[currentLang].welcome);
+  $("#text-best-score").text(translations[currentLang].textBestScore);
+  $(".best-score").each(function () {
+    $(this).text(translations[currentLang].score + " :");
+  });
+  $(".best-time").each(function () {
+    $(this).text(translations[currentLang].time );
+  });
+  $(".logout-button").text(translations[currentLang].logout);
+  $(".login-link").text(translations[currentLang].login);
+  $("#leaderboard").text(translations[currentLang].leaderboard);
 
   $("#page-title").text(translate[currentLang].title);
   $("#page-title-GP").text(translate[currentLang].titleGP);
@@ -122,6 +143,7 @@ function applyTranslations() {
   if (typeof currentTarget !== "undefined") {
   $("#randomText").text(translate[currentLang].guessText(currentTarget));
 }
+
 if (typeof currentType !== "undefined" && typeof currentTarget !== "undefined") {
   $("#randomTextREG").text(translate[currentLang].guessTextREG(currentType, currentTarget));
   $("#randomTextGP").text(translate[currentLang].guessTextGP(currentType, currentTarget));
@@ -133,11 +155,12 @@ if (typeof currentType !== "undefined" && typeof currentTarget !== "undefined") 
   $("#finalTries").html(`${translate[currentLang].finalTries} ${5 - essais}`);
   $("#finalTime").html(`${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`);
   if (essais === 0){
-
       $("#finalMessage").html(translate[currentLang].looseMessage);
   } else {
     $("#finalMessage").html(translate[currentLang].winMessage);
   }
+  $("#footer").text(translations[currentLang].footer)
+  $("#back-to-top").text(translations[currentLang].backToTop)
 }
 
 document.addEventListener("DOMContentLoaded", function () {

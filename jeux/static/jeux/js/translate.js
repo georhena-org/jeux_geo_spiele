@@ -83,7 +83,7 @@ function setLanguage(lang) {
     toggleRegions : "Gebietskörperschaften entdecken",
     villesInfo: "Mit GeoRhena können Sie 18 Städte des Oberrheins entdecken. Finden Sie hier ihre Namen, die Einwohnerzahl (2020) und die Fläche.",
     GPInfo: "Entdecken Sie bekannte Berge sowie die wichtigsten Wasserläufe des Gebiets.",
-    regionsInfo: "Der Oberrhein besteht aus die französische Gebietskörperschaft Collectivité européenne d'Alsace, 10 deutschen Landkreisen sowie 5 Schweizer Kantonen.",
+    regionsInfo: "Der Oberrhein besteht aus der französischen Gebietskörperschaft Collectivité européenne d'Alsace, 10 deutschen Landkreisen sowie 5 Schweizer Kantonen.",
     play: "SPIELEN",
     title: "Städte des Oberrheins",
     titleGP: "Physische Geographie des Oberrheins",
@@ -118,6 +118,9 @@ function applyTranslations() {
 
   $("#main-title").text(translations[currentLang].mainTitle);
   $("#test-version").text(translations[currentLang].testVersion);
+  
+  $("#footer").text(translations[currentLang].footer)
+  $("#back-to-top").text(translations[currentLang].backToTop)
 
   $("#welcome").text(translations[currentLang].welcome);
   $("#text-best-score").text(translations[currentLang].textBestScore);
@@ -152,12 +155,8 @@ function applyTranslations() {
   $("#regionsInfo").text(translations[currentLang].regionsInfo);
   $("#play-button").text(translations[currentLang].play);
   $("#title-play-button").text(translations[currentLang].play);
-
-
   
 
-  $("#footer").text(translations[currentLang].footer)
-  $("#back-to-top").text(translations[currentLang].backToTop)
 }
 
 document.addEventListener("DOMContentLoaded", function () {
