@@ -162,6 +162,10 @@ function formatTime(seconds) {
 }
 
 function startTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+
   elapsedTime = 0;
   document.getElementById('chrono').innerText = formatTime(elapsedTime);
 
