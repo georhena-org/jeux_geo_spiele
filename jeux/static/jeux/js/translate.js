@@ -12,6 +12,7 @@ function setLanguage(lang) {
   FR: {
     mainTitle: "Les jeux géo du Rhin Supérieur",
     testVersion : "Version test",
+    evaluation : "Donnez-nous votre avis !",
     textBestScore: "Meilleur score et temps pour chaque jeu",
     welcome: "Bienvenue",
     logout: "Se déconnecter",
@@ -63,6 +64,7 @@ function setLanguage(lang) {
   DE: {
     mainTitle: "Geographie-Spiele des Oberrheins",
     testVersion : "Testversion",
+    evaluation : "Sagen Sie uns Ihre Meinung!",
     textBestScore: "Beste Punktanzahl und Zeit für jedes Spiel",
     welcome: "Willkommen",
     logout: "Sich abmelden",
@@ -115,6 +117,8 @@ function setLanguage(lang) {
 function applyTranslations() {
 
   if (!translations[currentLang]) return;
+
+  $("#evaluationBtn").text(translations[currentLang].evaluation);
 
   $("#main-title").text(translations[currentLang].mainTitle);
   $("#test-version").text(translations[currentLang].testVersion);

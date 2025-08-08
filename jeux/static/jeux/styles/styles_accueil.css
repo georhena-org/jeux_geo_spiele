@@ -1,3 +1,23 @@
+#evaluationBtn {
+    display: block;
+    margin: 20px auto;
+    padding: 8px 16px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 20px;
+    font-weight:bold;
+    background-color: rgb(207, 18, 40);
+    color: white;
+    padding: 1em;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#evaluationBtn:hover {
+  transform: scale(1.1);
+}
+
 .button-group {
   padding: 2rem;
   border: 3px solid #161C94;
@@ -152,7 +172,7 @@
 
 #side-bar {
   position: absolute;
-  top: 620px;
+  top: 720px;
   left: 50px;
   width: 350px;
   z-index: 10;

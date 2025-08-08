@@ -8,6 +8,19 @@
 
 {% block content %}
   <section class="home">
+    
+    <!-- à enlever une fois le questionnaire terminé et dans styles_accueil.css mettre top: 620px; pour le style de #side-bar (permet d'ajuster la hauteur de l'encart à propos du Rhin Supérieur) -->
+      {% if user.is_authenticated %}  
+      <div>
+          <button onclick= "window.open('https://forms.office.com/e/uxTPW6X2aZ','_blank')" id="evaluationBtn">Donnez-nous votre avis !</button>
+        </div>
+        {% else %}
+        <div>
+          <button onclick= "window.open('https://jeux-geo.georhena.eu/accounts/login/')" id="evaluationBtn">Donnez-nous votre avis !</button>
+        </div>
+       {% endif %} 
+    <!-- fin de la partie concernant le questionnaire, si retiré ne pas oublier de régler la hauteur de #side-bar (dans styles_accueil.css) : top: 620px; -->
+    
     <div id = "pres-1"> Bienvenue sur la plateforme des jeux géographiques du Rhin Supérieur ! Cliquez sur un jeu pour commencer à jouer. </div>
   
     <div class="button-group" id ="button-group-title">
