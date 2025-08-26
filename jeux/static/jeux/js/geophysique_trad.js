@@ -143,7 +143,7 @@ let listeGuess = [];
 let featuresCorrectes = new Set();
 let currentTarget = "";
 let wrongClicksForCurrentTarget = 0;
-let blinkInterval = null; // Pour mémoriser l'intervalle de clignotement
+let blinkInterval = null; 
 let timerInterval = null;
 let elapsedTime = 0;
 let gameActive = false
@@ -257,7 +257,7 @@ function startBlinkingCurrentTarget() {
   blinkInterval = setInterval(() => {
     if (!featuresCorrectes.has(featureToBlink)) {
       if (visible) {
-        // style "flash"
+        // style clignotement
         featureToBlink.setStyle(new ol.style.Style({
           stroke: new ol.style.Stroke({ color: 'yellow', width: 4 }),
           image: new ol.style.Circle({
@@ -318,7 +318,7 @@ function getCookie(name) {
 
 function checkIfAllLoaded() {
   if (sommetsLoaded && hydroLoaded) {
-    // Fusionner les listes (si ce n'est pas déjà fait)
+    // Fusionner les listes 
     listeNoms = [...new Set([...listeSommets, ...listeHydro])];
 
 let nomsDisponibles = [...listeNoms]; //créer une copie
@@ -326,7 +326,7 @@ listeGuess = [];
 
 for (let i = 0; i < 20 && nomsDisponibles.length > 0; i++) {
   const randomIndex = Math.floor(Math.random() * nomsDisponibles.length);
-  const nom = nomsDisponibles.splice(randomIndex, 1)[0]; // Retire et récupère l'élément
+  const nom = nomsDisponibles.splice(randomIndex, 1)[0]; 
   listeGuess.push(nom);
 }
 
@@ -353,7 +353,7 @@ function initGame(){
   updateGauge()
   featuresCorrectes = new Set();
   wrongClicksForCurrentTarget = 0;
-  blinkInterval = null; // Pour mémoriser l'intervalle de clignotement
+  blinkInterval = null; // mémoriser l'intervalle de clignotement
   isBlinking = false
 
   //document.getElementById('error').innerText = essais;
@@ -506,7 +506,6 @@ function endGame(){
 let selected= null;
 const tooltip = document.getElementById('tooltip');
 const tooltipFalse = document.getElementById('tooltipFalse');
-
 
 
 
@@ -678,10 +677,10 @@ document.getElementById('restartBtnGP').addEventListener('click', function () {
   document.getElementById('chrono').innerText = "00:00";
 
   // Réinitialiser les variables et relancer le jeu
-  stopTimer();  // au cas où un timer est encore en cours
-  initGame();   // ta fonction principale de lancement du jeu
+  stopTimer();  // Arrêter le timer au cas où
+  initGame();   // lancer le jeu
 });
 
 window.onload = () => {
-  initGame(); // démarre le jeu à l'ouverture de la page
+  initGame(); // première initialisation du jeu
 };
