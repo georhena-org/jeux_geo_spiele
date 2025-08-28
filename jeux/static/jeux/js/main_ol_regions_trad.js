@@ -146,7 +146,7 @@ function hoverByType(feature) {
   });
 }
 
-// fonctions utilitaires (cf main_ol_trad.js)
+// fonctions utilitaires 
 
 //formater le temps au format 00:00
 function formatTime(seconds) {
@@ -333,7 +333,7 @@ regionsSource.once('featuresloadend', function () {
     listeRegions.push(f.get('nom'))
     const nom = f.get('nom')
     const nuts3 = f.get('type')
-    nomToNUTS[nom] = nuts3; // Dictionnaire des types pour bien afficher la phrase de devinette
+    nomToNUTS[nom] = nuts3; // dictionnaire des types pour bien afficher la phrase de devinette
   });
   afterLoad()
   showRandomText()
@@ -343,9 +343,9 @@ regionsSource.once('featuresloadend', function () {
 
 // Fin du jeu
 function endGame(){
-  isBlinking = false // Arrêter le clignotement des entités s'il est présent
+  isBlinking = false // arrêter le clignotement des entités s'il est présent
   finalTries = 5 - essais
-  // Arrêter le clignotement des entités s'il est présent
+  // réinitisaliser l'intervalle de clignotement
   if (blinkInterval) {
     clearInterval(blinkInterval);
     blinkInterval = null;
@@ -357,18 +357,18 @@ function endGame(){
     ? translate[currentLang].winMessageREG
     : translate[currentLang].looseMessage;
 
-  // Afficher les différents éléments de fin de jeu
+  // afficher les différents éléments de fin de jeu
   document.getElementById('finalMessage').innerText = message;
   document.getElementById('finalScore').innerText = `${translate[currentLang].finalScore} ${points}`;
   document.getElementById('finalTries').innerText = `${translate[currentLang].finalTries} ${5 - essais}`;
   document.getElementById('finalTime').innerText = `${translate[currentLang].finalTime} ${formatTime(elapsedTime)}`;
 
-  // Montrer l'encart de fin de jeu
+  // montrer l'encart de fin de jeu
   document.getElementById('endGameMessage').style.display = "block";
   document.getElementById('restartBtnREG').style.display = "block";
   document.getElementById('exploreBtn').style.display = "block";
 
-  // Enlever les éléments de jeu pour pouvoir montrer l'affichage de fin
+  // enlever les éléments de jeu (devinette, jauge etc..) pour pouvoir montrer l'affichage de fin
   document.getElementById('guess').style.display = "none";
   document.getElementById('test').style.display = "none";
   document.getElementById('points').style.display = "none";
@@ -376,7 +376,7 @@ function endGame(){
   document.getElementById('encouragments').style.display = "none";
   document.getElementById('chrono').innerText = "";
   
-  // Appliquer ce style aux régions non trouvées
+  // appliquer ce style aux régions non trouvées
   regionsLayer.getSource().getFeatures().forEach((feature) => {
     const nom = feature.get('nom');
     if (listeRegions.includes(nom)) {
@@ -387,7 +387,7 @@ function endGame(){
 const baseUrl = window.location.origin; // permet de créer le bon lien pour enregistrer les scores
 console.log(baseUrl)
 
-// fonction pour enregistrer les scores et autre dans la base de données 
+// fonction fetch pour enregistrer les scores et autre dans la base de données 
   fetch(`${baseUrl}/api/save_score/`,  {
     method: 'POST',
     headers: {
@@ -556,7 +556,7 @@ document.getElementById('restartBtnREG').addEventListener('click', function () {
   document.getElementById('restartBtnREG').style.display = "none";
   document.getElementById('exploreBtn').style.display = "none";
 
-  // Réinitialiser l'interface utilisateur de jeu
+  // Réinitialiser l'interface de jeu
   document.getElementById('guess').style.display = "block";
   document.getElementById('test').style.display = "block";
   document.getElementById('points').style.display = "block";

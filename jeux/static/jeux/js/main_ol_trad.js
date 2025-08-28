@@ -11,7 +11,8 @@ const basemap = new ol.layer.Tile({
 });
 
 const crsSource = new ol.source.Vector({
-    url: 'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Alimite_crs&OUTPUTFORMAT=json',
+    url: crsUrl, // temporaire : cause : maintenance du datahub
+    //'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Alimite_crs&OUTPUTFORMAT=json',
     format: new ol.format.GeoJSON(),
   });
 
@@ -255,7 +256,8 @@ function initGame() {
   }
 // source de la couche ville
 var villesSource = new ol.source.Vector({
-    url: 'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Avilles_principales&OUTPUTFORMAT=json',
+    url: villesUrl, // temporaire, cause : maintenance datahub
+    // lien WFS : 'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Avilles_principales&OUTPUTFORMAT=json',
     format: new ol.format.GeoJSON(),
   });
 
@@ -290,7 +292,7 @@ function endGame(){
   isBlinking = false; // arrêter le clignotement s'il y en a
   tooltip.style.display = "none"; // empecher le tooltip de rester affiché une fois que le jeu est fini
   finalTries = 5 - essais;
-  if (blinkInterval) { // arrêter le clignotement s'il y en a
+  if (blinkInterval) { // réinitisaliser l'intervalle de clignotement
     clearInterval(blinkInterval);
     blinkInterval = null;
   }
@@ -309,7 +311,7 @@ function endGame(){
   document.getElementById('restartBtn').style.display = "block";
   document.getElementById('exploreBtn').style.display = "block";
 
-  // Enlever les éléments de jeu pour pouvoir montrer l'affichage de fin
+  // Enlever les éléments de jeu (devinette, jauge etc..) pour pouvoir montrer l'affichage de fin
   document.getElementById('guess').style.display = "none";
   document.getElementById('test').style.display = "none";
   document.getElementById('points').style.display = "none";
@@ -346,7 +348,7 @@ function endGame(){
 const baseUrl = window.location.origin; // permet de créer le bon lien pour enregistrer les scores
 console.log(baseUrl)
 
-// fonction pour enregistrer les scores et autre dans la base de données 
+// fonction fetch pour enregistrer les scores et autre dans la base de données 
   fetch(`${baseUrl}/api/save_score/`,  {
     method: 'POST',
     headers: {

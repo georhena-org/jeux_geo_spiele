@@ -1,0 +1,26 @@
+{
+"type": "FeatureCollection",
+"name": "villes_principales_backup",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4258" } },
+"xy_coordinate_resolution": 1e-05,
+"features": [
+{ "type": "Feature", "properties": { "name": "Landau in der Pfalz", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.12097, 49.19996 ] } },
+{ "type": "Feature", "properties": { "name": "Baden-Baden", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.23994, 48.76134 ] } },
+{ "type": "Feature", "properties": { "name": "Karlsruhe", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.39125, 49.0075 ] } },
+{ "type": "Feature", "properties": { "name": "Freiburg im Breisgau", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.84878, 47.99302 ] } },
+{ "type": "Feature", "properties": { "name": "Colmar", "nuts0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.35808, 48.07741 ] } },
+{ "type": "Feature", "properties": { "name": "Strasbourg", "nuts0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.74552, 48.58318 ] } },
+{ "type": "Feature", "properties": { "name": "Haguenau", "nuts0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.79062, 48.81582 ] } },
+{ "type": "Feature", "properties": { "name": "Offenburg", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.94519, 48.47157 ] } },
+{ "type": "Feature", "properties": { "name": "Mulhouse", "nuts0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.33801, 47.74771 ] } },
+{ "type": "Feature", "properties": { "name": "Solothurn", "nuts0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.53735, 47.20704 ] } },
+{ "type": "Feature", "properties": { "name": "Basel", "nuts0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.58853, 47.55577 ] } },
+{ "type": "Feature", "properties": { "name": "Liestal", "nuts0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.73485, 47.4837 ] } },
+{ "type": "Feature", "properties": { "name": "Aarau", "nuts0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 8.04445, 47.39228 ] } },
+{ "type": "Feature", "properties": { "name": "Delémont", "nuts0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.34735, 47.36397 ] } },
+{ "type": "Feature", "properties": { "name": "Lörrach", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.66123, 47.61214 ] } },
+{ "type": "Feature", "properties": { "name": "Dahn", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.77909, 49.15079 ] } },
+{ "type": "Feature", "properties": { "name": "Waldshut-Tiengen", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.24086, 47.62818 ] } },
+{ "type": "Feature", "properties": { "name": "Rastatt", "nuts0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.20881, 48.85742 ] } }
+]
+}

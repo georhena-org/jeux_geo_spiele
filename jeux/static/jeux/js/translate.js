@@ -3,11 +3,11 @@ let currentLang = localStorage.getItem('lang') || 'FR'; // valeur par défaut
 
 function setLanguage(lang) {
   currentLang = lang;
-  localStorage.setItem('lang', lang); // mémorise la langue
+  localStorage.setItem('lang', lang); // mémoriser la langue
   applyTranslations();
 }
 
-
+//dictionnaires francais/allemand
     const translations = {
   FR: {
     mainTitle: "Les jeux géo du Rhin Supérieur",
@@ -47,9 +47,9 @@ function setLanguage(lang) {
     tooltip: "Afficher le nom des entités au survol",
     guessText: (feat) => `Où se situe ${feat} ?`,
     guessTextREG: (type, feat) => {
-      if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
-      if (type === "canton") return `Où se situe le canton de ${feat} ?`;
-      return `Où se situe la ${feat} ?`;
+      if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
+      if (type === "canton") return `Où se situe le canton de ${feat} ?`;
+       return `Où se situe la ${feat} ?`;
     },
     winMessage: "🎉 Bravo ! Toutes les villes ont été trouvées !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
@@ -98,9 +98,9 @@ function setLanguage(lang) {
     tooltip: "Namen beim Überfahren anzeigen",
     guessText: (feat) => `Wo liegt ${feat}?`,
     guessTextREG:  (type, feat) => {
-      if (type === "Landkreis") return `Wo liegt der Landkreis ${feat}?`;
-      if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
-       return `Wo liegt ${feat}?`;
+      if (type === "Landkreis") return `Wo liegt der Landkreis ${feat}?`;
+      if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
+       return `Wo liegt ${feat}?`;
     },
     winMessage: "🎉 Glückwunsch! Alle Städte wurden gefunden!",
     looseMessage: "😔 Schade... Versuch es nochmal, du bist fast da!",
@@ -114,11 +114,11 @@ function setLanguage(lang) {
   }
 };
 
+// fonction pour appliquer les traductions
 function applyTranslations() {
 
   if (!translations[currentLang]) return;
 
-  $("#evaluationBtn").text(translations[currentLang].evaluation);
 
   $("#main-title").text(translations[currentLang].mainTitle);
   $("#test-version").text(translations[currentLang].testVersion);

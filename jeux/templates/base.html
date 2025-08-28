@@ -63,7 +63,7 @@
     
     <main>
         {% block content %}
-        <!-- Contenu des pages ici -->
+        <!-- contenu des autres pages ici -->
         {% endblock %}
     </main>
 
@@ -75,7 +75,6 @@
             <div id = "test-version" style = "color: white; padding-bottom: 1rem;">Version test</div>
     </div>
     <div id="footer-right">
-            <!-- <a href="{% url 'accueil' %}"> -->
             <img src ="{% static 'jeux/data/logo/logo_GeoRhena_illicoweb.svg' %}"alt="Photo de ${name}" style="max-width:200px; max-height:150px;" onclick= "window.open('https://www.georhena.eu','_blank')">
             </a>
         </div>
@@ -83,6 +82,7 @@
     <script src="{% static 'jeux/scripts.js' %}"></script>
     <script src="{% static 'jeux/js/translate.js' %}"></script>
     <script>
+// afficher le profil utilisateur      
 document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.querySelector(".dropdown-toggle");
     const content = document.querySelector(".dropdown-content");
@@ -93,12 +93,12 @@ document.addEventListener("DOMContentLoaded", function () {
             content.classList.toggle("show");
         });
 
-        // Fermer le menu si on clique ailleurs
         document.addEventListener("click", function () {
             content.classList.remove("show");
         });
     }
 });
+// retourner en haut de la page au clic
   document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("back-to-top").addEventListener("click", function () {
       window.scrollTo({

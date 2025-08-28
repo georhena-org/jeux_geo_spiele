@@ -9,14 +9,11 @@ const basemap = new ol.layer.Tile({
 });
 
 const crsSource = new ol.source.Vector({
-    url: 'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Alimite_crs&OUTPUTFORMAT=json',
+    url: crsUrl, // temporaire : cause : maintenance du datahub
+    //'https://geoportal.georhena.eu/geoserver/boundaries/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=boundaries%3Alimite_crs&OUTPUTFORMAT=json',
     format: new ol.format.GeoJSON(),
   });
 
-const rhinSource = new ol.source.Vector({
-    url: 'https://geoportal.georhena.eu/geoserver/water/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=water%3Arhin&OUTPUTFORMAT=json',
-    format: new ol.format.GeoJSON(),
-  });
 
 const paysSource = new ol.source.Vector({
     url: paysUrl,
@@ -28,25 +25,16 @@ const paysSource = new ol.source.Vector({
 // charger la couche de la limite du crs avec le style
 var crsLayer = new ol.layer.Vector({
   source: crsSource,
-  //background: 'black',
   style: new ol.style.Style({
       fill: new ol.style.Fill({ color: 'rgba(161, 109, 13, 0.1)' }),
       stroke: new ol.style.Stroke({ color: 'rgba(161, 109, 13, 0.51)', width: 2 }),
   }),
 });
 
-var rhinLayer = new ol.layer.Vector({
-  source: rhinSource,
-  //background: 'black',
-  style: new ol.style.Style({
-      fill: new ol.style.Fill({ color: 'rgb(26, 200, 206)' }),
-      stroke: new ol.style.Stroke({ color: 'rgb(26, 200, 206)', width: 2 }),
-  }),
-});
+
 
 var paysLayer = new ol.layer.Vector({
   source: paysSource,
-  //background: 'black',
   style: new ol.style.Style({
       fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0)' }),
       stroke: new ol.style.Stroke({ color: 'rgba(206, 65, 34, 0.84)', width: 2 }),
@@ -56,7 +44,7 @@ var paysLayer = new ol.layer.Vector({
 
 const map = new ol.Map({
   target: 'webmap',
-  layers: [basemap, crsLayer, paysLayer], //ombrageLayer
+  layers: [basemap, crsLayer, paysLayer], 
   view: new ol.View({
     center: [
     7.772542083975405,
@@ -70,9 +58,7 @@ const map = new ol.Map({
 
 
 //Les styles des couches
-
-  // Style rouge pour les villes non trouvées
-  const labeledStyle = function (nomVille) {
+const labeledStyle = function (nomVille) {
     return new ol.style.Style({
       text: new ol.style.Text({
         font: '14px Quicksand, sans-serif',
@@ -101,36 +87,15 @@ const labeledStyleSommets = function (sommet) {
       image: new ol.style.Circle({
         radius: 5,
         fill: new ol.style.Fill({ color: 'rgba(42, 136, 13, 0.8)' }),
-        //stroke: new ol.style.Stroke({ color: 'black', width: 2 }),
       }),
     });
   };
 
 
-
-const originalPointStyle = new ol.style.Style({
-  image: new ol.style.Circle({
-      radius: 5,
-      fill: new ol.style.Fill({ color: 'rgba(42, 136, 13, 0.55)'}),
-      //stroke: new ol.style.Stroke({ color: 'rgba(42, 136, 13, 0.58)', width: 2 }),
-}),
-});
-
 const normalLineStyle = new ol.style.Style({
     stroke: new ol.style.Stroke({ color: 'rgb(34, 130, 168)', width: 2 }),
 });
 
-const hoverPointStyle = new ol.style.Style({
-  image: new ol.style.Circle({
-      radius: 6,
-      fill: new ol.style.Fill({ color: 'rgba(42, 136, 13, 0.99)' }),
-      stroke: new ol.style.Stroke({ color: 'rgba(42, 136, 13, 0.99)', width: 2 }),
-}),
-});
-
-const hoverLineStyle = new ol.style.Style({
-    stroke: new ol.style.Stroke({ color: 'rgba(34, 130, 168, 0.99)', width: 3 }),
-});
 
 function detectTypeFromNUTS(nuts3) {
   if (!nuts3) return null;
@@ -170,6 +135,7 @@ function styleByType(feature) {
 
 
 
+// charger la couche des villes 
 
 const villesSource = new ol.source.Vector({
     url: villesUrl,
@@ -177,22 +143,22 @@ const villesSource = new ol.source.Vector({
   });
 
 
-// charger la couche de points des villes avec le style
 villesLayer = new ol.layer.Vector({
   source: villesSource,
 });
 
 
-  const sommetsSource = new ol.source.Vector({
+// charger la couche des sommets 
+const sommetsSource = new ol.source.Vector({
     url: sommetsUrl,
     format: new ol.format.GeoJSON(),
   })
 
-  sommetsLayer = new ol.layer.Vector({
+sommetsLayer = new ol.layer.Vector({
   source: sommetsSource,
-  //style: originalPointStyle,
   });
 
+// charger la couche des cours d'eau
   const hydroSource = new ol.source.Vector({
     url: hydroUrl,
     format: new ol.format.GeoJSON(),
@@ -203,17 +169,18 @@ villesLayer = new ol.layer.Vector({
     style: normalLineStyle,
   });
 
+// charger la couche des collectivités
 const regionsSource = new ol.source.Vector({
     url: regionsUrl,
     format: new ol.format.GeoJSON(),
   });
 
-// charger la couche de points des régions avec le style
 regionsLayer = new ol.layer.Vector({
   source: regionsSource,
   style: styleByType,
 });
 
+// ajouter à la map et cacher
 map.addLayer(regionsLayer);  
 map.addLayer(hydroLayer);
 map.addLayer(sommetsLayer);
@@ -223,6 +190,7 @@ hydroLayer.setVisible(false)
 sommetsLayer.setVisible(false)
 regionsLayer.setVisible(false)
 
+// charger les entités ponctuelles et enregistrer leur nom pour afficher les étiquettes
 villesSource.once('featuresloadend', function () {
 villesLayer.getSource().getFeatures().forEach((feature) => {
     const nom = feature.get('nom');
@@ -237,7 +205,7 @@ sommetsLayer.getSource().getFeatures().forEach((feature) => {
   });
 });
 
-
+// mettre en place le popup qui s'affichera au survol
 const popupContainer = document.getElementById('popup');
 const popupContent = document.getElementById('popup-content');
 
@@ -251,7 +219,7 @@ map.addOverlay(overlay);
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  // scroll sur le bouton "Qu’est-ce que le Rhin Supérieur ?"
+  // aller à la carte interactive au clic sur le bouton "Qu’est-ce que le Rhin Supérieur ?"
   const btnInfo = document.getElementById('btn-info');
   btnInfo.addEventListener('click', (e) => {
     e.preventDefault();
@@ -264,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('button-group-title').scrollIntoView({ behavior: 'smooth' });
   });
 
-    // fonction pour gérer l'affichage de la couche (checkbox)
+  // fonction pour gérer l'affichage des couches 
   function toggleLayer(checkboxId, layerOrLayers) {
     const checkbox = document.getElementById(checkboxId);
     checkbox.addEventListener('change', () => {
@@ -281,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
   toggleLayer('toggleGeophysique', [hydroLayer, sommetsLayer]);
   toggleLayer('toggleRegions', regionsLayer);
 
-  // Fonction pour gérer le menu déroulant et la flèche
+  // fonction pour gérer le menu déroulant et la flèche
   function toggleInfo(headerId, arrowId, infoId) {
     const header = document.getElementById(headerId);
     const arrow = document.getElementById(arrowId);
@@ -298,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       arrow.classList.toggle('open', !isOpen);
     });
   }
-
+  // afficher l'info pour chaque couche
   toggleInfo('villesHeader', 'arrowVilles', 'villesInfo');
   toggleInfo('geophysiqueHeader', 'arrowGeophysique', 'geophysiqueInfo');
   toggleInfo('regionsHeader', 'arrowRegions', 'regionsInfo');
@@ -308,21 +276,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 map.on('pointermove', function(evt) {
   const hit = map.hasFeatureAtPixel(evt.pixel);
-  map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+  map.getTargetElement().style.cursor = hit ? 'pointer' : ''; // curseur en mode pointer quand il rencontre une entité
   let features = [];
 
   map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
     features.push({ feature, layer });
   });
 
-  if (features.length === 0) {
+  if (features.length === 0) { // si pas d'entités trouvées cacher le popup
     overlay.setPosition(undefined);
     return;
   }
 
   const coordinate = evt.coordinate;
 
-  // Priorité manuelle
+  // système de priorité pour que le popup s'affiche bien 
   const priorityOrder = [sommetsLayer, hydroLayer, villesLayer, regionsLayer];
   let selected = null;
 
@@ -331,6 +299,7 @@ map.on('pointermove', function(evt) {
     if (selected) break;
   }
 
+  // afficher le contenu du popup correctement
   if (selected) {
     const { feature, layer } = selected;
     let name = feature.get('name') || feature.get('nom');

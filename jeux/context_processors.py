@@ -36,7 +36,7 @@ def get_leaderboard():
                     'time_seconds': str(timedelta(seconds=best_time.time_seconds))[2:7],
                 })
 
-        # Étape 3 : Trier d'abord par score DESC, puis par temps ASC
+        # Étape 3 : Trier d'abord par score descendant, puis par temps ascendant
         sorted_results = sorted(results, key=lambda x: (-x['score'], x['time_seconds']))
         top_10 = sorted_results[:10]
 

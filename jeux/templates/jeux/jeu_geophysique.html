@@ -21,15 +21,12 @@
         </div>
         <div id = "test">
           <h2>Essais restants </h2>
-          <!-- <div id="test"> -->
-             <!-- <div id = "error" > </div> -->
               <div id="gaugeGP">
               <div class="gauge-boxGP"></div>
               <div class="gauge-boxGP"></div>
               <div class="gauge-boxGP"></div>
               <div class="gauge-boxGP"></div>
               <div class="gauge-boxGP"></div>
-            <!-- </div> -->
           </div>
         </div>
         <div id = "points">
@@ -61,7 +58,9 @@
   <script>
   const hydroUrl = "{% static 'jeux/data/hydro_rs_4258.geojson' %}";
   const sommetsUrl = "{% static 'jeux/data/sommets_rs_4258_final.geojson' %}";
-  const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}"; 
+  const paysUrl = "{% static 'jeux/data/FR_DE_CH_4258.geojson' %}";
+  const villesUrl = "{% static 'jeux/data/villes_principales_backup.geojson' %}"; 
+  const crsUrl = "{% static 'jeux/data/crs.geojson' %}";  
   </script>
   <script src="{% static 'jeux/js/geophysique_trad.js' %}"></script>
   <script src="{% static 'jeux/js/translate_jeux.js' %}"></script>

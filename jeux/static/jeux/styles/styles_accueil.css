@@ -1,22 +1,5 @@
-#evaluationBtn {
-    display: block;
-    margin: 20px auto;
-    padding: 8px 16px;
-    font-family: 'Quicksand', sans-serif;
-    font-size: 20px;
-    font-weight:bold;
-    background-color: rgb(207, 18, 40);
-    color: white;
-    padding: 1em;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    cursor: pointer;
-}
 
-#evaluationBtn:hover {
-  transform: scale(1.1);
-}
+/* styles pour accueil.html */
 
 .button-group {
   padding: 2rem;
@@ -35,15 +18,14 @@
   margin-bottom: 1.5rem;
 }
 
-/* Boutons en ligne */
 .button-row {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
-  flex-wrap: nowrap; /* pour forcer sur une seule ligne */
+  flex-wrap: nowrap; 
 }
 
-/* Assure un style homogène */
+
 .button-row a {
   text-align: center;
   width: 250px;
@@ -100,7 +82,7 @@
 .btn-reg,
 .btn-villes,
 .btn-GP {
-  font-size: 1.3rem !important; /* augmente la taille globale */
+  font-size: 1.3rem !important; 
   line-height: 1.5;
   text-align: center;
 }
@@ -114,8 +96,8 @@
 .home {
   display: flex;
   flex-direction: column;
-  align-items: center; /* centre horizontalement */
-  justify-content: center; /* centre verticalement si hauteur définie */
+  align-items: center; 
+  justify-content: center;
   text-align: center;
   padding: 2rem;
   background-image: url("/static/jeux/data/logo/contour_rs.svg");
@@ -159,20 +141,19 @@
 
 
 .map {
-  /*position: absolute;*/
-  top: 100px; /* 60px header + 60px titre */
+  top: 100px; 
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 650px;/*calc(100% - 100px);*/
+  height: 650px;
   z-index: 1;
 }
 
 
 #side-bar {
   position: absolute;
-  top: 720px;
+  top: 620px;
   left: 50px;
   width: 350px;
   z-index: 10;
@@ -231,12 +212,12 @@
 #popup-content {
   white-space: nowrap;
   overflow-x: auto;
-  max-width: 300px; /* Ajuste selon ton besoin */
+  max-width: 300px; 
 }
 
 #play-button {
-  margin-top: auto; /* pousse le bouton en bas */
-  align-self: center; /* centre le bouton horizontalement */
+  margin-top: auto; 
+  align-self: center; 
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
   font-family: inherit;
@@ -270,7 +251,7 @@
   padding-left: 0;
 }
 
-/* Adaptation mobile */
+/* Gérer le responsive */
 @media (max-width: 768px) {
   .button-row {
     flex-wrap: wrap;
@@ -289,7 +270,7 @@
   .map {
     position: relative;
     width: 100%;
-    height: 400px; /* Hauteur réduite sur petits écrans */
+    height: 400px; 
     top: 0;
   }
   body, html {

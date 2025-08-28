@@ -1,3 +1,5 @@
+/* Styles pour les trois jeux */
+
 body, html {
   margin: 0;
   padding: 0;
@@ -21,13 +23,12 @@ body, html {
 }
 
 .map {
-  /*position: absolute;*/
   top: 100px; /* 60px header + 60px titre */
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 700px;/*calc(100% - 100px);*/
+  height: 700px; /*calc(100% - 100px);*/
   z-index: 1;
 }
 
@@ -134,12 +135,12 @@ body, html {
   transition: opacity 0.3s ease;
 }
 
-/* Les autres blocs restent inchangés ou légèrement ajustés */
+
 #guess, #test, #points, #endGameMessage {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centrage vertical */
-  align-items: center;      /* Centrage horizontal */
+  justify-content: center; 
+  align-items: center;    
   text-align: center;
   background: white;
   border-radius: 10px;
@@ -290,7 +291,7 @@ body, html {
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
-
+/* Gérer le responsive */
 @media screen and (max-width: 768px) {
   #page-title, #page-title-GP, #page-title-reg {
     position: static;
@@ -314,7 +315,7 @@ body, html {
   .map {
     position: relative;
     width: 100%;
-    height: 400px; /* Hauteur réduite sur petits écrans */
+    height: 400px; 
     top: 0;
   }
 

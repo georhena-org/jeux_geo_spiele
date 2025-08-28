@@ -1,10 +1,11 @@
 
 function setLanguage(lang) {
   currentLang = lang;
-  localStorage.setItem('lang', lang); // mémorise la langue
+  localStorage.setItem('lang', lang); // mémoriser la langue
   applyTranslations();
 }
 
+//dictionnaires francais/allemand
     const translate = {
   FR: {
     mainTitle: "Les jeux géographiques du Rhin Supérieur",
@@ -35,15 +36,15 @@ function setLanguage(lang) {
     tooltip: "Afficher le nom des entités au survol",
     guessText: (feat) => `Où se situe ${feat} ?`,
     guessTextREG: (type, feat) => {
-      if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
-      if (type === "canton") return `Où se situe le canton de ${feat} ?`;
+      if (type === "Landkreis") return `Où se situe le Landkreis ${feat} ?`;
+      if (type === "canton") return `Où se situe le canton de ${feat} ?`;
       if (type === "Stadt") return `Où se situe ${feat}?`;
-      return `Où se situe la ${feat} ?`;
+        return `Où se situe la ${feat} ?`;
     },
     guessTextGP: (type, feat) => {
-      if (type === "sommet") return `⛰️ Où se situe le sommet ${feat} ?`;
-      if (type === "fleuve") return `💧 Où se situe le cours d'eau ${feat} ?`;
-      return `Où se situe ${feat} ?`;
+      if (type === "sommet") return `⛰️ Où se situe le sommet ${feat} ?`;
+      if (type === "fleuve") return `💧 Où se situe le cours d'eau ${feat} ?`;
+      return `Où se situe ${feat} ?`;
     },
     winMessage: "🎉 Bravo ! Tu as tout trouvé !",
     looseMessage: "😔 Dommage... Essaie encore, tu y es presque !",
@@ -86,15 +87,15 @@ function setLanguage(lang) {
     tooltip: "Namen beim Überfahren anzeigen",
     guessText: (feat) => `Wo liegt ${feat}?`,
     guessTextREG:  (type, feat) => {
-      if (type === "Landkreis") return `Wo liegt der Landkreis ${feat}?`;
-      if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
+      if (type === "Landkreis") return `Wo liegt der Landkreis ${feat}?`;
+      if (type === "canton") return `Wo liegt der Kanton ${feat}?`;
       if (type === "Stadt") return `Wo liegt ${feat}?`;
-       return `Wo liegt ${feat}?`;
+       return `Wo liegt ${feat}?`;
     },
     guessTextGP:  (type, feat) => {
-      if (type === "sommet") return `⛰️ Wo liegt der Gipfel ${feat}?`;
-      if (type === "fleuve") return `💧 Wo liegt der Wasserlauf ${feat}?`;
-       return `Wo liegt ${feat}?`;
+      if (type === "sommet") return `⛰️ Wo liegt der Gipfel ${feat}?`;
+      if (type === "fleuve") return `💧 Wo liegt der Wasserlauf ${feat}?`;
+       return `Wo liegt ${feat}?`;
     },
     winMessage: "🎉 Glückwunsch! Du hast alles richtig erraten!",
     looseMessage: "😔 Schade... Versuch es nochmal, du hast es fast geschafft!",
@@ -112,6 +113,7 @@ function setLanguage(lang) {
   }
 };
 
+// fonction pour appliquer les traductions avec JQuery
 function applyTranslations() {
 
   $("#main-title").text(translate[currentLang].mainTitle);
@@ -149,7 +151,6 @@ if (typeof currentType !== "undefined" && typeof currentTarget !== "undefined") 
   $("#randomTextGP").text(translate[currentLang].guessTextGP(currentType, currentTarget));
 }
 
-  //$("#encouragments").text(translate[currentLang].encouragements);
 
   $("#finalScore").html(`${translate[currentLang].finalScore} ${points}`);
   $("#finalTries").html(`${translate[currentLang].finalTries} ${5 - essais}`);

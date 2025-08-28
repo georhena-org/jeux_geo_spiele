@@ -17,7 +17,7 @@ from .forms import CustomLoginForm
 from jeux.context_processors import get_leaderboard
 class CustomLoginView(LoginView):
     authentication_form = CustomLoginForm
-    template_name = 'registration/login.html'  # ou ton chemin actuel
+    template_name = 'registration/login.html'  
 
 
 
@@ -71,7 +71,7 @@ def save_score(request):
         )
 
 @login_required
-@csrf_exempt  # à sécuriser après avec un token CSRF si tu veux
+@csrf_exempt 
 def save_game_result(request):
     if request.method == 'POST':
         data = json.loads(request.body)
