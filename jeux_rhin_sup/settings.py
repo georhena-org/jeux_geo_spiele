@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'jeux_rhin_sup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql', #'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('NAME_GEOGAME'), #'NAME': BASE_DIR / 'db.sqlite3',
-        'USER': os.getenv('USER_GEOGAME'),
-        'PASSWORD': os.getenv('PASSWORD_GEOGAME'),
-        'HOST': os.getenv('HOST_GEOGAME'),
-        'PORT': os.getenv('PORT_GEOGAME'), 
+        'NAME': os.getenv('GEOGAME_DB'), #'NAME': BASE_DIR / 'db.sqlite3',
+        'USER': os.getenv('GEOGAME_USER'),
+        'PASSWORD': os.getenv('GEOGAME_PASSWORD'),
+        'HOST': os.getenv('GEOGAME_HOST'),
+        'PORT': os.getenv('GEOGAME_PORT'), 
     }
 }
 
