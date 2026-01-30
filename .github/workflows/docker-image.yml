@@ -1,16 +1,28 @@
 name: Docker Image CI
-
 on:
   push:
-    branches: [ "test_cicd" ]
+    branches: ["test_cicd"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag jeux_geo:$(date +%s)
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: docker build -t jeux_geo:${{ github.sha }} .
+
+      - name: Save + max-compress (zstd)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y zstd
+          docker save jeux_geo:${{ github.sha }} | zstd -19 -T0 -o jeux_geo_${{ github.sha }}.tar.zst
+          ls -lh jeux_geo_${{ github.sha }}.tar.zst
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-zstd
+          path: jeux_geo_${{ github.sha }}.tar.zst
+          retention-days: 1
+          compression-level: 0
