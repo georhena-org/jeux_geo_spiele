@@ -1,28 +1,90 @@
-name: Docker Image CI
+name: Build n Ship Jeux-Geo
+# needs 4 secrets: DEPLOY_USER, DEPLOY_SSH_KEY, DEPLOY_HOST, DEPLOY_PORT
 on:
   push:
-    branches: ["test_cicd"]
+    branches: [ "main_" ]
+  workflow_dispatch: {}
+
+# needs 2 env variables
+env:
+  PROJECT_NAME : "jeux_geo"               # will be used for the image name, and for the archive name
+  METADATA_FILE : "cicd_metadata.json"   # metadata file containing the image_version attribute (should be in X.Y.Z format), default is cicd_metadata.json
 
 jobs:
-  build:
+  build_and_ship:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Build
-        run: docker build -t jeux_geo:${{ github.sha }} .
-
-      - name: Save + max-compress (zstd)
+      - name: Parse version and compute tags and archive name
+        id: meta
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y zstd
-          docker save jeux_geo:${{ github.sha }} | zstd -19 -T0 -o jeux_geo_${{ github.sha }}.tar.zst
-          ls -lh jeux_geo_${{ github.sha }}.tar.zst
+          set -euo pipefail
+          ver="$(jq -r '.image_version // empty' "${METADATA_FILE}")"
+          if [[ -z "$ver" ]]; then
+            echo "image_version missing in ${METADATA_FILE}" >&2
+            exit 1
+          fi
+          if [[ ! "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "image_version must match X.Y.Z, got: $ver" >&2
+            exit 1
+          fi
+          echo "parsed version: $ver"
+          short_sha="${GITHUB_SHA::7}"
+        
+          tag="$ver-sha_${short_sha}"
+          archive="${PROJECT_NAME}-image-${tag}.tar.zst"
+        
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+        
+          echo "Image tag: $tag"
+          echo "Archive name: $archive"
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-image-zstd
-          path: jeux_geo_${{ github.sha }}.tar.zst
-          retention-days: 1
-          compression-level: 0
+
+      - name: Build docker image
+        run: |
+          set -euo pipefail
+          tag="${{ steps.meta.outputs.tag }}"
+          docker build -t "${PROJECT_NAME}-image:${{ steps.meta.outputs.tag }}" .
+
+      - name: Save image archive (docker save | zstd)
+        run: |
+          set -euo pipefail
+          archive="${{ steps.meta.outputs.archive }}"
+
+          # zstd level 3
+          docker save "${PROJECT_NAME}-image:${{ steps.meta.outputs.tag }}" \
+            | zstd -3 -T0 \
+            > "$archive"
+
+          ls -lh "$archive"
+
+      - name: Setup SSH (key file + known_hosts)
+        run: |
+          set -euo pipefail
+      
+          install -m 700 -d "$HOME/.ssh"
+      
+          # Write private key directly to the one file we will use
+          install -m 600 /dev/null "$HOME/.ssh/deploy_key"
+          printf '%s' '${{ secrets.DEPLOY_SSH_KEY }}' | tr -d '\r' > "$HOME/.ssh/deploy_key"
+      
+          # Pin server host key (do NOT disable host key checking)
+          ssh-keyscan -p '${{ secrets.DEPLOY_PORT }}' '${{ secrets.DEPLOY_HOST }}' >> "$HOME/.ssh/known_hosts"
+          chmod 644 "$HOME/.ssh/known_hosts"
+      
+      - name: Send archive to server
+        run: |
+          set -euo pipefail
+          archive='${{ steps.meta.outputs.archive }}'
+      
+          sftp -b - \
+            -P '${{ secrets.DEPLOY_PORT }}' \
+            -i "$HOME/.ssh/deploy_key" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=accept-new \
+            '${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}' <<EOF
+          put "$archive" "$archive"
+          EOF
