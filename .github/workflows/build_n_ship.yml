@@ -47,7 +47,7 @@ jobs:
         run: |
           set -euo pipefail
           tag="${{ steps.meta.outputs.tag }}"
-          docker build -t "${PROJECT_NAME}-image:${{ steps.meta.outputs.tag }}" .
+          docker build -t "${PROJECT_NAME}:${{ steps.meta.outputs.tag }}" .
 
       - name: Save image archive (docker save | zstd)
         run: |
