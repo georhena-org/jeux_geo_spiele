@@ -34,7 +34,7 @@ jobs:
           short_sha="${GITHUB_SHA::7}"
         
           tag="$ver-sha_${short_sha}"
-          archive="${PROJECT_NAME}-image-${tag}.tar.zst"
+          archive="${PROJECT_NAME}-${tag}.tar.zst"
         
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "archive=$archive" >> "$GITHUB_OUTPUT"
@@ -55,7 +55,7 @@ jobs:
           archive="${{ steps.meta.outputs.archive }}"
 
           # zstd level 3
-          docker save "${PROJECT_NAME}-image:${{ steps.meta.outputs.tag }}" \
+          docker save "${PROJECT_NAME}:${{ steps.meta.outputs.tag }}" \
             | zstd -3 -T0 \
             > "$archive"
 
