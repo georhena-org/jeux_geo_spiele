@@ -76,7 +76,20 @@ jobs:
           # Pin server host key (do NOT disable host key checking)
           ssh-keyscan -p '${{ secrets.DEPLOY_PORT }}' '${{ secrets.DEPLOY_HOST }}' >> "$HOME/.ssh/known_hosts"
           chmod 644 "$HOME/.ssh/known_hosts"
+
+          
+      - name: (Debug) print public key from deploy key
+        shell: bash
+        run: |
+          set -euo pipefail
       
+          echo "=== Derived public key ==="
+          ssh-keygen -y -f "$HOME/.ssh/deploy_key"
+      
+          echo
+          echo "=== Fingerprint ==="
+          ssh-keygen -lf "$HOME/.ssh/deploy_key"
+
       - name: Send archive to server
         run: |
           set -euo pipefail
