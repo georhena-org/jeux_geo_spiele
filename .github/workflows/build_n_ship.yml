@@ -14,6 +14,60 @@ jobs:
   build_and_ship:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup SSH (key file + known_hosts)
+        run: |
+          set -euo pipefail
+      
+          install -m 700 -d "$HOME/.ssh"
+      
+          # Write private key directly to the one file we will use
+          install -m 600 /dev/null "$HOME/.ssh/deploy_key"
+          printf '%s' '${{ secrets.DEPLOY_SSH_KEY }}' | tr -d '\r' > "$HOME/.ssh/deploy_key"
+          
+          # Pin server host key (do NOT disable host key checking)
+          ssh-keyscan -p '${{ secrets.DEPLOY_PORT }}' '${{ secrets.DEPLOY_HOST }}' >> "$HOME/.ssh/known_hosts"
+          chmod 644 "$HOME/.ssh/known_hosts"
+
+          
+      - name: Validate private key shape
+        shell: bash
+        run: |
+          set -euo pipefail
+      
+          echo "=== File info ==="
+          ls -l "$HOME/.ssh/deploy_key"
+          wc -l "$HOME/.ssh/deploy_key"
+      
+          echo
+          echo "=== First & last line ==="
+          head -n 1 "$HOME/.ssh/deploy_key"
+          tail -n 1 "$HOME/.ssh/deploy_key"
+      
+          echo
+          echo "=== Check for Windows CRLF (^M) ==="
+          if grep -q $'\r' "$HOME/.ssh/deploy_key"; then
+            echo "❌ CR characters detected"
+            exit 1
+          else
+            echo "✅ No CR characters"
+          fi
+      
+          echo
+          echo "=== Validate SSH key parsing ==="
+          ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null
+          echo "✅ SSH key parses correctly"
+
+          
+      - name: Debug – SSH verbose test
+        shell: bash
+        run: |
+          ssh -vvv \
+            -p '${{ secrets.DEPLOY_PORT }}' \
+            -i "$HOME/.ssh/deploy_key" \
+            -o IdentitiesOnly=yes \
+            -o PreferredAuthentications=publickey \
+            '${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}' true
+            
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -60,63 +114,6 @@ jobs:
             > "$archive"
 
           ls -lh "$archive"
-
-      - name: Setup SSH (key file + known_hosts)
-        run: |
-          set -euo pipefail
-      
-          install -m 700 -d "$HOME/.ssh"
-      
-          # Write private key directly to the one file we will use
-          install -m 600 /dev/null "$HOME/.ssh/deploy_key"
-          cat <<EOF | tr -d '\r' > "$HOME/.ssh/deploy_key"
-          ${{ secrets.DEPLOY_SSH_KEY }}
-          EOF
-          
-          # Pin server host key (do NOT disable host key checking)
-          ssh-keyscan -p '${{ secrets.DEPLOY_PORT }}' '${{ secrets.DEPLOY_HOST }}' >> "$HOME/.ssh/known_hosts"
-          chmod 644 "$HOME/.ssh/known_hosts"
-
-          
-      - name: Debug – validate private key shape
-        shell: bash
-        run: |
-          set -euo pipefail
-      
-          echo "=== File info ==="
-          ls -l "$HOME/.ssh/deploy_key"
-          wc -l "$HOME/.ssh/deploy_key"
-      
-          echo
-          echo "=== First & last line ==="
-          head -n 1 "$HOME/.ssh/deploy_key"
-          tail -n 1 "$HOME/.ssh/deploy_key"
-      
-          echo
-          echo "=== Check for Windows CRLF (^M) ==="
-          if grep -q $'\r' "$HOME/.ssh/deploy_key"; then
-            echo "❌ CR characters detected"
-            exit 1
-          else
-            echo "✅ No CR characters"
-          fi
-      
-          echo
-          echo "=== Validate SSH key parsing ==="
-          ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null
-          echo "✅ SSH key parses correctly"
-
-          
-      - name: Debug – SSH verbose test
-        shell: bash
-        run: |
-          ssh -vvv \
-            -p '${{ secrets.DEPLOY_PORT }}' \
-            -i "$HOME/.ssh/deploy_key" \
-            -o IdentitiesOnly=yes \
-            -o PreferredAuthentications=publickey \
-            '${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}' true
-
 
       - name: Send archive to server
         run: |
