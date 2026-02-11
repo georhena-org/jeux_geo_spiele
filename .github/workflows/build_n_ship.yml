@@ -78,17 +78,34 @@ jobs:
           chmod 644 "$HOME/.ssh/known_hosts"
 
           
-      - name: (Debug) print public key from deploy key
+      - name: Debug – validate private key shape
         shell: bash
         run: |
           set -euo pipefail
       
-          echo "=== Derived public key ==="
-          ssh-keygen -y -f "$HOME/.ssh/deploy_key"
+          echo "=== File info ==="
+          ls -l "$HOME/.ssh/deploy_key"
+          wc -l "$HOME/.ssh/deploy_key"
       
           echo
-          echo "=== Fingerprint ==="
-          ssh-keygen -lf "$HOME/.ssh/deploy_key"
+          echo "=== First & last line ==="
+          head -n 1 "$HOME/.ssh/deploy_key"
+          tail -n 1 "$HOME/.ssh/deploy_key"
+      
+          echo
+          echo "=== Check for Windows CRLF (^M) ==="
+          if grep -q $'\r' "$HOME/.ssh/deploy_key"; then
+            echo "❌ CR characters detected"
+            exit 1
+          else
+            echo "✅ No CR characters"
+          fi
+      
+          echo
+          echo "=== Validate SSH key parsing ==="
+          ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null
+          echo "✅ SSH key parses correctly"
+
 
       - name: Send archive to server
         run: |
