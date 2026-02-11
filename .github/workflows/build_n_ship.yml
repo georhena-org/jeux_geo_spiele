@@ -58,15 +58,15 @@ jobs:
           echo "✅ SSH key parses correctly"
 
           
-      - name: Debug – SSH verbose test
-        shell: bash
-        run: |
-          ssh -vvv \
-            -p '${{ secrets.DEPLOY_PORT }}' \
-            -i "$HOME/.ssh/deploy_key" \
-            -o IdentitiesOnly=yes \
-            -o PreferredAuthentications=publickey \
-            '${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}' true
+      # - name: Debug – SSH verbose test
+      #   shell: bash
+      #   run: |
+      #     ssh -vvv \
+      #       -p '${{ secrets.DEPLOY_PORT }}' \
+      #       -i "$HOME/.ssh/deploy_key" \
+      #       -o IdentitiesOnly=yes \
+      #       -o PreferredAuthentications=publickey \
+      #       '${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}' true
             
       - name: Checkout
         uses: actions/checkout@v4
