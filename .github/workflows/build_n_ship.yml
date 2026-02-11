@@ -69,7 +69,9 @@ jobs:
       
           # Write private key directly to the one file we will use
           install -m 600 /dev/null "$HOME/.ssh/deploy_key"
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" | tr -d '\r' > "$HOME/.ssh/deploy_key"
+          cat <<EOF | tr -d '\r' > "$HOME/.ssh/deploy_key"
+          ${{ secrets.DEPLOY_SSH_KEY }}
+          EOF
           
           # Pin server host key (do NOT disable host key checking)
           ssh-keyscan -p '${{ secrets.DEPLOY_PORT }}' '${{ secrets.DEPLOY_HOST }}' >> "$HOME/.ssh/known_hosts"
