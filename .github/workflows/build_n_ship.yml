@@ -106,6 +106,17 @@ jobs:
           ssh-keygen -y -f "$HOME/.ssh/deploy_key" > /dev/null
           echo "✅ SSH key parses correctly"
 
+          
+      - name: Debug – SSH verbose test
+        shell: bash
+        run: |
+          ssh -vvv \
+            -p '${{ secrets.DEPLOY_PORT }}' \
+            -i "$HOME/.ssh/deploy_key" \
+            -o IdentitiesOnly=yes \
+            -o PreferredAuthentications=publickey \
+            '${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}' true
+
 
       - name: Send archive to server
         run: |
