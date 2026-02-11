@@ -2,7 +2,7 @@ name: Build n Ship Jeux-Geo
 # needs 4 secrets: DEPLOY_USER, DEPLOY_SSH_KEY, DEPLOY_HOST, DEPLOY_PORT
 on:
   push:
-    branches: [ "main_" ]
+    branches: [ "main" ]
   workflow_dispatch: {}
 
 # needs 2 env variables
