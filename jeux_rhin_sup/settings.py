@@ -31,7 +31,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv("DEBUG", "").lower() in ("1", "true", "yes", "on")
 
 ALLOWED_HOSTS = ['jeux-geo.georhena.eu','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = [
+    "https://jeux-geo.georhena.eu",
+]
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
